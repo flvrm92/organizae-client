@@ -1,0 +1,46 @@
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+}
+
+@media (max-width: 960px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--app-border, #f0f0f0);
+}
+
+.info-label {
+  font-size: 0.875rem;
+  color: var(--app-text-secondary, #666);
+  min-width: 120px;
+}
+
+.id-value {
+  font-family: monospace;
+  font-size: 0.8rem;
+}
+
+.total-value {
+  font-weight: 700;
+  color: #1976d2;
+  font-size: 1rem;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}

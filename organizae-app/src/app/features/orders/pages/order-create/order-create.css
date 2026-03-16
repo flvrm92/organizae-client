@@ -1,0 +1,60 @@
+.full-width {
+  width: 100%;
+}
+
+.section-divider {
+  margin: 1rem 0;
+}
+
+.items-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.items-header h3 {
+  margin: 0;
+}
+
+.items-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.table-field {
+  width: 200px;
+}
+
+.table-field-sm {
+  width: 100px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--app-surface, #f5f5f5);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.total-label {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.total-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

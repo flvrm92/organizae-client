@@ -1,0 +1,58 @@
+<div class="page-container">
+  <app-page-header title="Pedidos" subtitle="Gerencie os pedidos da loja">
+    <button actions mat-flat-button color="primary" routerLink="/pedidos/novo">
+      <mat-icon>add</mat-icon> Novo Pedido
+    </button>
+  </app-page-header>
+
+  <div class="search-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar pedidos</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="ID ou cliente..." />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="pagedOrders()" class="full-width-table">
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Pedido</th>
+        <td mat-cell *matCellDef="let row" class="id-cell">{{ row.code }}</td>
+      </ng-container>
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.customerName }}</td>
+      </ng-container>
+      <ng-container matColumnDef="subTotal">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row">{{ row.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="statusName">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip-set><mat-chip>{{ row.statusName }}</mat-chip></mat-chip-set>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button [routerLink]="['/pedidos', row.id]"
+            matTooltip="Ver detalhes"><mat-icon>visibility</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="deleteOrder(row)"
+            matTooltip="Excluir"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">Nenhum pedido encontrado</td>
+      </tr>
+    </table>
+    <mat-paginator [length]="filteredOrders().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]"
+      (page)="onPage($event)" showFirstLastButtons />
+  </div>
+</div>

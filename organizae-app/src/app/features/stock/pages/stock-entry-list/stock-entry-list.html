@@ -1,0 +1,41 @@
+<div class="page-container">
+  <app-page-header title="Entradas de Estoque" subtitle="Gerencie as entradas de mercadorias">
+    <button actions mat-flat-button color="primary" routerLink="/estoque/entradas/nova">
+      <mat-icon>add</mat-icon> Nova Entrada
+    </button>
+  </app-page-header>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="pagedEntries()" class="full-width-table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row" class="id-cell">{{ row.id | slice:0:8 }}...</td>
+      </ng-container>
+      <ng-container matColumnDef="supplierName">
+        <th mat-header-cell *matHeaderCellDef>Fornecedor</th>
+        <td mat-cell *matCellDef="let row">{{ row.supplierName ?? row.supplierId }}</td>
+      </ng-container>
+      <ng-container matColumnDef="movementsCount">
+        <th mat-header-cell *matHeaderCellDef>Itens</th>
+        <td mat-cell *matCellDef="let row">{{ row.movements?.length ?? 0 }}</td>
+      </ng-container>
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef>Data</th>
+        <td mat-cell *matCellDef="let row">{{ row.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button [routerLink]="['/estoque/entradas', row.id]" matTooltip="Ver detalhes"><mat-icon>visibility</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="deleteEntry(row)" matTooltip="Excluir"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">Nenhuma entrada encontrada</td>
+      </tr>
+    </table>
+    <mat-paginator [length]="entries().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]" (page)="onPage($event)" showFirstLastButtons />
+  </div>
+</div>

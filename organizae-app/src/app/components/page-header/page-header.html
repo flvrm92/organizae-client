@@ -1,0 +1,18 @@
+<div class="page-header">
+  <div class="header-left">
+    @if (backLink()) {
+      <a mat-icon-button [routerLink]="backLink()" class="back-btn" [attr.aria-label]="backLabel()">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+    }
+    <div class="header-titles">
+      <h1 class="page-title">{{ title() }}</h1>
+      @if (subtitle()) {
+        <p class="page-subtitle">{{ subtitle() }}</p>
+      }
+    </div>
+  </div>
+  <div class="header-actions">
+    <ng-content select="[actions]" />
+  </div>
+</div>

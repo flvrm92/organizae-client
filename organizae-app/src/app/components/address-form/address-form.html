@@ -1,0 +1,68 @@
+<div class="address-form-section">
+  <div class="address-section-header">
+    <h3>Endereços</h3>
+    <button mat-stroked-button type="button" (click)="addAddress()">
+      <mat-icon>add</mat-icon> Adicionar Endereço
+    </button>
+  </div>
+
+  @for (group of addressGroups; track $index) {
+    <div [formGroup]="$any(group)" class="address-card">
+      <div class="address-card-header">
+        <span class="address-number">Endereço {{ $index + 1 }}</span>
+        @if ($index > 0) {
+          <button mat-icon-button type="button" color="warn" (click)="removeAddress($index)" aria-label="Remover endereço">
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+      </div>
+
+      <div class="address-grid">
+        <mat-form-field appearance="outline" class="field-street">
+          <mat-label>Rua / Logradouro *</mat-label>
+          <input matInput formControlName="street" />
+          @if ($any(group).get('street')?.hasError('required') && $any(group).get('street')?.touched) {
+            <mat-error>Rua é obrigatória</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-number">
+          <mat-label>Número</mat-label>
+          <input matInput formControlName="number" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-complement">
+          <mat-label>Complemento</mat-label>
+          <input matInput formControlName="complement" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-neighborhood">
+          <mat-label>Bairro</mat-label>
+          <input matInput formControlName="neighborhood" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-city">
+          <mat-label>Cidade *</mat-label>
+          <input matInput formControlName="city" />
+          @if ($any(group).get('city')?.hasError('required') && $any(group).get('city')?.touched) {
+            <mat-error>Cidade é obrigatória</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="field-zipcode">
+          <mat-label>CEP</mat-label>
+          <input matInput formControlName="zipCode" />
+        </mat-form-field>
+      </div>
+
+      <mat-checkbox formControlName="isPrimary" class="primary-checkbox">
+        Endereço principal
+      </mat-checkbox>
+    </div>
+  } @empty {
+    <div class="no-addresses">
+      <mat-icon>location_off</mat-icon>
+      <span>Nenhum endereço cadastrado</span>
+    </div>
+  }
+</div>

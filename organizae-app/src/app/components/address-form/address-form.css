@@ -1,0 +1,74 @@
+.address-form-section {
+  margin-top: 1rem;
+}
+
+.address-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.address-section-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.address-card {
+  border: 1px solid var(--app-border, #e0e0e0);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: var(--app-surface, #fff);
+}
+
+.address-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.address-number {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0 1rem;
+}
+
+.field-street { grid-column: span 8; }
+.field-number { grid-column: span 4; }
+.field-complement { grid-column: span 6; }
+.field-neighborhood { grid-column: span 6; }
+.field-city { grid-column: span 6; }
+.field-state { grid-column: span 2; }
+.field-zipcode { grid-column: span 4; }
+.field-country { grid-column: span 6; }
+
+@media (max-width: 600px) {
+  .field-street, .field-number, .field-complement, .field-neighborhood,
+  .field-city, .field-state, .field-zipcode, .field-country {
+    grid-column: span 12;
+  }
+}
+
+.primary-checkbox {
+  margin-top: 0.5rem;
+}
+
+.no-addresses {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  color: var(--app-text-secondary, #999);
+  gap: 0.5rem;
+  border: 1px dashed var(--app-border, #e0e0e0);
+  border-radius: 8px;
+}

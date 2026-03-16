@@ -1,0 +1,115 @@
+<div class="page-container">
+  <app-page-header title="Painel" subtitle="Visão geral do sistema" />
+
+  @if (loading()) {
+  <div class="loading-center">
+    <mat-spinner diameter="48" />
+  </div>
+  } @else if (stats(); as s) {
+  <!-- KPI Cards -->
+  <div class="kpi-grid">
+    <mat-card class="kpi-card">
+      <mat-card-content>
+        <div class="kpi-icon orders"><mat-icon>receipt_long</mat-icon></div>
+        <div class="kpi-value">{{ s.totalOrders }}</div>
+        <div class="kpi-label">Pedidos</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <mat-card-content>
+        <div class="kpi-icon customers"><mat-icon>people</mat-icon></div>
+        <div class="kpi-value">{{ s.totalCustomers }}</div>
+        <div class="kpi-label">Clientes</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <mat-card-content>
+        <div class="kpi-icon products"><mat-icon>inventory_2</mat-icon></div>
+        <div class="kpi-value">{{ s.totalProducts }}</div>
+        <div class="kpi-label">Produtos</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="kpi-card">
+      <mat-card-content>
+        <div class="kpi-icon stock"><mat-icon>warehouse</mat-icon></div>
+        <div class="kpi-value">{{ s.totalStockEntries }}</div>
+        <div class="kpi-label">Entradas de Estoque</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="charts-grid">
+
+    <!-- Revenue Chart -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Receita por Pedido (últimos 12)</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="chart-content">
+        @if (s.revenueData.length > 0) {
+        <ngx-charts-bar-vertical [results]="s.revenueData" [scheme]="colorScheme" [legend]="false"
+          [showXAxisLabel]="true" [showYAxisLabel]="true" xAxisLabel="Data" yAxisLabel="Valor (R$)" [xAxis]="true"
+          [yAxis]="true" [gradient]="false" />
+        } @else {
+        <div class="no-data">Nenhum dado disponível</div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Orders by Status -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Pedidos por Status</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="chart-content">
+        @if (s.ordersByStatus.length > 0) {
+        <ngx-charts-pie-chart [results]="s.ordersByStatus" [scheme]="colorScheme" [legend]="true"
+          [legendPosition]="legendPosition" [doughnut]="true" />
+        } @else {
+        <div class="no-data">Nenhum dado disponível</div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  <!-- Recent Orders Table -->
+  <mat-card class="recent-orders-card">
+    <mat-card-header>
+      <mat-card-title>Pedidos Recentes</mat-card-title>
+    </mat-card-header>
+    <mat-divider />
+    <mat-card-content>
+      @if (s.recentOrders.length === 0) {
+      <p class="no-data">Nenhum pedido encontrado.</p>
+      } @else {
+      <table class="recent-table">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Status</th>
+            <th>Total</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (order of s.recentOrders; track order.id) {
+          <tr>
+            <td class="mono">{{ order.code }}</td>
+            <td>{{ order.statusName }}</td>
+            <td>{{ order.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+            <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  }
+</div>

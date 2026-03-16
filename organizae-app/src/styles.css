@@ -1,0 +1,341 @@
+@import 'tailwindcss';
+@import '@angular/material/prebuilt-themes/azure-blue.css';
+
+/* ─── Base resets ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ─── Light theme (default) ─────────────────────────────────── */
+:root {
+  --app-bg: #f5f5f5;
+  --app-surface: #ffffff;
+  --app-text: #1a1a1a;
+  --app-text-secondary: #666666;
+  --app-border: #e0e0e0;
+  --app-sidenav-bg: #ffffff;
+  --app-toolbar-bg: #ffffff;
+}
+
+/* ─── Dark theme ─────────────────────────────────────────────── */
+html.dark {
+  color-scheme: dark;
+
+  /* App-level custom tokens */
+  --app-bg: #101418;
+  --app-surface: #1d2125;
+  --app-text: #e1e2e8;
+  --app-text-secondary: #c2c7cf;
+  --app-border: #42474e;
+  --app-sidenav-bg: #1d2125;
+  --app-toolbar-bg: #1d2125;
+
+  /* M3 system tokens — override the azure-blue prebuilt light values */
+  --mat-sys-background: #101418;
+  --mat-sys-on-background: #e1e2e8;
+  --mat-sys-surface: #101418;
+  --mat-sys-on-surface: #e1e2e8;
+  --mat-sys-surface-variant: #42474e;
+  --mat-sys-on-surface-variant: #c2c7cf;
+  --mat-sys-surface-container-lowest: #0b0f14;
+  --mat-sys-surface-container-low: #191c20;
+  --mat-sys-surface-container: #1d2125;
+  --mat-sys-surface-container-high: #272b2f;
+  --mat-sys-surface-container-highest: #32363a;
+  --mat-sys-inverse-surface: #e1e2e8;
+  --mat-sys-inverse-on-surface: #2f3033;
+  --mat-sys-outline: #8c9198;
+  --mat-sys-outline-variant: #42474e;
+  --mat-sys-shadow: #000000;
+  --mat-sys-scrim: #000000;
+  --mat-sys-surface-tint: #97cbff;
+
+  /* Primary — azure blue dark palette */
+  --mat-sys-primary: #97cbff;
+  --mat-sys-on-primary: #003257;
+  --mat-sys-primary-container: #004a7f;
+  --mat-sys-on-primary-container: #cee5ff;
+  --mat-sys-inverse-primary: #0061a4;
+
+  /* Secondary */
+  --mat-sys-secondary: #bccbda;
+  --mat-sys-on-secondary: #263544;
+  --mat-sys-secondary-container: #3c4b5b;
+  --mat-sys-on-secondary-container: #d8e7f7;
+
+  /* Tertiary */
+  --mat-sys-tertiary: #d6beea;
+  --mat-sys-on-tertiary: #3b2951;
+  --mat-sys-tertiary-container: #533f69;
+  --mat-sys-on-tertiary-container: #f2daf7;
+
+  /* Error */
+  --mat-sys-error: #ffb4ab;
+  --mat-sys-on-error: #690005;
+  --mat-sys-error-container: #93000a;
+  --mat-sys-on-error-container: #ffdad6;
+
+  /* Angular Material app-level tokens */
+  --mat-app-background-color: #101418;
+  --mat-app-text-color: #e1e2e8;
+}
+
+/* Body */
+html.dark body {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+
+/* Sidenav container */
+html.dark .mat-drawer-container,
+html.dark .mat-sidenav-container {
+  background-color: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+html.dark .mat-drawer,
+html.dark .mat-sidenav {
+  background-color: var(--app-sidenav-bg) !important;
+  color: var(--app-text) !important;
+}
+
+/* Toolbar */
+html.dark .mat-toolbar {
+  background-color: var(--app-toolbar-bg) !important;
+  color: var(--app-text) !important;
+  --mat-toolbar-container-background-color: #1d2125;
+  --mat-toolbar-container-text-color: #e1e2e8;
+}
+
+/* Cards */
+html.dark .mat-mdc-card {
+  --mdc-elevated-card-container-color: #1d2125;
+  --mdc-outlined-card-container-color: #1d2125;
+  background-color: #1d2125 !important;
+  color: var(--app-text);
+}
+
+/* Table */
+html.dark .mat-mdc-table {
+  --mat-table-background-color: #1d2125;
+  --mat-table-row-item-label-text-color: #e1e2e8;
+  --mat-table-header-headline-color: #c2c7cf;
+  --mat-table-row-item-outline-color: #42474e;
+  background-color: #1d2125 !important;
+}
+
+html.dark .mat-mdc-row,
+html.dark .mat-mdc-header-row,
+html.dark .mat-mdc-footer-row {
+  background-color: #1d2125 !important;
+}
+
+html.dark .mat-mdc-cell,
+html.dark .mat-mdc-header-cell {
+  color: #e1e2e8;
+  border-bottom-color: #42474e;
+}
+
+html.dark .mat-mdc-header-cell {
+  color: #c2c7cf;
+}
+
+/* Paginator */
+html.dark .mat-mdc-paginator {
+  --mat-paginator-container-background-color: #1d2125;
+  --mat-paginator-container-text-color: #e1e2e8;
+  --mat-paginator-enabled-icon-color: #c2c7cf;
+  background-color: #1d2125 !important;
+  color: #e1e2e8;
+}
+
+/* Form fields */
+html.dark .mat-mdc-form-field {
+  --mdc-outlined-text-field-input-text-color: #e1e2e8;
+  --mdc-outlined-text-field-label-text-color: #c2c7cf;
+  --mdc-outlined-text-field-focus-label-text-color: #97cbff;
+  --mdc-outlined-text-field-outline-color: #8c9198;
+  --mdc-outlined-text-field-hover-outline-color: #c2c7cf;
+  --mdc-outlined-text-field-focus-outline-color: #97cbff;
+  --mdc-outlined-text-field-caret-color: #97cbff;
+  --mdc-outlined-text-field-disabled-outline-color: #42474e;
+  --mdc-filled-text-field-input-text-color: #e1e2e8;
+  --mdc-filled-text-field-label-text-color: #c2c7cf;
+  --mdc-filled-text-field-focus-label-text-color: #97cbff;
+  --mdc-filled-text-field-container-color: #272b2f;
+  --mdc-filled-text-field-active-indicator-color: #8c9198;
+  --mdc-filled-text-field-focus-active-indicator-color: #97cbff;
+  --mdc-filled-text-field-caret-color: #97cbff;
+}
+
+/* Select */
+html.dark .mat-mdc-select {
+  --mat-select-trigger-text-color: #e1e2e8;
+  --mat-select-enabled-arrow-color: #c2c7cf;
+  --mat-select-focused-arrow-color: #97cbff;
+  --mat-select-invalid-arrow-color: #ffb4ab;
+}
+
+html.dark .mat-mdc-select-panel,
+html.dark .cdk-overlay-pane .mat-mdc-select-panel {
+  background-color: #272b2f !important;
+}
+
+html.dark .mat-mdc-option {
+  --mat-option-label-text-color: #e1e2e8;
+  --mat-option-selected-state-label-text-color: #97cbff;
+  --mat-option-hover-state-layer-color: rgba(255, 255, 255, 0.08);
+  --mat-option-focus-state-layer-color: rgba(255, 255, 255, 0.12);
+  --mat-option-selected-state-layer-color: rgba(151, 203, 255, 0.12);
+  color: #e1e2e8;
+}
+
+/* Menu */
+html.dark .mat-mdc-menu-panel {
+  --mat-menu-container-color: #272b2f;
+  background-color: #272b2f !important;
+}
+
+html.dark .mat-mdc-menu-item {
+  --mat-menu-item-label-text-color: #e1e2e8;
+  --mat-menu-item-icon-color: #c2c7cf;
+  --mat-menu-item-hover-state-layer-color: rgba(255, 255, 255, 0.08);
+  color: #e1e2e8;
+}
+
+html.dark .mat-mdc-menu-item .mat-icon {
+  color: #c2c7cf;
+}
+
+/* Dialog */
+html.dark .mat-mdc-dialog-container .mdc-dialog__surface {
+  --mdc-dialog-container-color: #1d2125;
+  background-color: #1d2125 !important;
+}
+
+html.dark .mat-mdc-dialog-container {
+  --mdc-dialog-supporting-text-color: #c2c7cf;
+  --mdc-dialog-subhead-color: #e1e2e8;
+  color: #e1e2e8;
+}
+
+/* List items (nav list in sidenav) */
+html.dark .mat-mdc-list-item,
+html.dark .mat-mdc-nav-list .mat-mdc-list-item {
+  --mdc-list-list-item-label-text-color: #e1e2e8;
+  --mdc-list-list-item-supporting-text-color: #c2c7cf;
+  --mdc-list-list-item-leading-icon-color: #c2c7cf;
+  --mdc-list-list-item-hover-state-layer-color: rgba(255, 255, 255, 0.08);
+  --mdc-list-list-item-focus-state-layer-color: rgba(255, 255, 255, 0.12);
+  color: #e1e2e8;
+}
+
+/* Chips */
+html.dark .mat-mdc-chip {
+  --mdc-chip-label-text-color: #e1e2e8;
+  --mdc-chip-elevated-container-color: #32363a;
+  --mdc-chip-with-icon-icon-color: #c2c7cf;
+  --mdc-chip-outline-color: #42474e;
+}
+
+/* Snackbar */
+html.dark .mdc-snackbar__surface {
+  background-color: #32363a !important;
+}
+
+html.dark .mat-mdc-snack-bar-container .mdc-snackbar__label {
+  color: #e1e2e8 !important;
+}
+
+html.dark .mat-mdc-snack-bar-action {
+  color: #97cbff !important;
+}
+
+/* Divider */
+html.dark .mat-divider {
+  border-color: #42474e;
+}
+
+/* Progress spinner */
+html.dark .mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #97cbff;
+}
+
+/* Progress bar */
+html.dark .mat-mdc-progress-bar {
+  --mat-progress-bar-active-indicator-color: #97cbff;
+  --mat-progress-bar-track-color: #004a7f;
+}
+
+/* Tooltip */
+html.dark .mdc-tooltip__surface {
+  background-color: #e1e2e8 !important;
+  color: #1d2125 !important;
+}
+
+/* Icon buttons in dark mode */
+html.dark .mat-mdc-icon-button {
+  color: #c2c7cf;
+}
+
+/* ─── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ─── Utilities ─────────────────────────────────────────────── */
+.page-container {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.mat-column-actions {
+  width: 120px;
+  text-align: right;
+}

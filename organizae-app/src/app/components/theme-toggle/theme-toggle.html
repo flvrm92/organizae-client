@@ -1,0 +1,4 @@
+<button mat-icon-button [matTooltip]="themeService.isDark() ? 'Mudar para tema claro' : 'Mudar para tema escuro'"
+  (click)="themeService.toggle()">
+  <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+</button>

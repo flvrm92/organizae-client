@@ -1,0 +1,39 @@
+<div class="page-container">
+  <app-page-header title="Detalhes da Entrada" backLink="/estoque/entradas" />
+
+  @if (loading()) {
+    <div class="loading-center"><mat-spinner diameter="40" /></div>
+  } @else if (entry()) {
+    <div class="detail-grid">
+      <mat-card>
+        <mat-card-header><mat-card-title>Informações</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <div class="info-row"><span class="info-label">ID</span><span class="id-value">{{ entry()!.id }}</span></div>
+          <div class="info-row"><span class="info-label">Fornecedor</span><span>{{ entry()!.supplierName ?? entry()!.supplierId }}</span></div>
+          <div class="info-row"><span class="info-label">Data</span><span>{{ entry()!.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header><mat-card-title>Produtos</mat-card-title></mat-card-header>
+        <mat-card-content>
+          <table mat-table [dataSource]="entry()!.movements ?? []" class="full-width-table">
+            <ng-container matColumnDef="productId">
+              <th mat-header-cell *matHeaderCellDef>Produto ID</th>
+              <td mat-cell *matCellDef="let row" class="id-cell">{{ row.productId | slice:0:8 }}...</td>
+            </ng-container>
+            <ng-container matColumnDef="quantity">
+              <th mat-header-cell *matHeaderCellDef>Quantidade</th>
+              <td mat-cell *matCellDef="let row">{{ row.quantity }}</td>
+            </ng-container>
+            <ng-container matColumnDef="costPrice">
+              <th mat-header-cell *matHeaderCellDef>Custo Unit.</th>
+              <td mat-cell *matCellDef="let row">{{ row.costPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="movColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: movColumns;"></tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

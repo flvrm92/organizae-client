@@ -1,0 +1,51 @@
+<div class="page-container">
+  <app-page-header title="Produtos" subtitle="Gerencie o catálogo de produtos">
+    <button actions mat-flat-button color="primary" routerLink="/produtos/novo">
+      <mat-icon>add</mat-icon> Novo Produto
+    </button>
+  </app-page-header>
+
+  <div class="search-row">
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar produtos</mat-label>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="Nome ou código..." />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+  </div>
+
+  <div class="table-container">
+    <table mat-table [dataSource]="pagedProducts()" class="full-width-table">
+      <ng-container matColumnDef="code">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let row">{{ row.code ?? '—' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Preço</th>
+        <td mat-cell *matCellDef="let row">{{ row.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip-set><mat-chip [class]="'status-' + row.statusId">{{ row.statusName ?? row.statusId }}</mat-chip></mat-chip-set>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button [routerLink]="['/produtos', row.id]" matTooltip="Editar"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="warn" (click)="deleteProduct(row)" matTooltip="Excluir"><mat-icon>delete</mat-icon></button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">Nenhum produto encontrado</td>
+      </tr>
+    </table>
+    <mat-paginator [length]="filteredProducts().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]" (page)="onPage($event)" showFirstLastButtons />
+  </div>
+</div>

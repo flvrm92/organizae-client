@@ -1,0 +1,15 @@
+.filter-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.empty-row {
+  text-align: center;
+  padding: 2rem;
+}
