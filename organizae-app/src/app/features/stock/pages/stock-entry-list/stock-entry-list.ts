@@ -10,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, SlicePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { IStockEntry } from '../../../../../types/IStockEntry';
 import { StockService } from '../../services/stock.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
@@ -18,7 +18,7 @@ import { PageHeader } from '../../../../components/page-header/page-header';
 
 @Component({
   selector: 'app-stock-entry-list',
-  imports: [RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTooltipModule, FormsModule, DatePipe, SlicePipe, PageHeader],
+  imports: [RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTooltipModule, FormsModule, DatePipe, PageHeader],
   templateUrl: './stock-entry-list.html',
   styleUrl: './stock-entry-list.css'
 })
@@ -32,7 +32,7 @@ export class StockEntryList implements OnInit {
   loading = signal(false);
   pageSize = 20;
   pageIndex = 0;
-  displayedColumns = ['id', 'supplierName', 'movementsCount', 'createdAt', 'actions'];
+  displayedColumns = ['code', 'supplierName', 'movementsCount', 'createdAt', 'actions'];
 
   ngOnInit(): void { this.loadEntries(); }
 

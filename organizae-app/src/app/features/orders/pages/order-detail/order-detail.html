@@ -12,7 +12,8 @@
             }}</span></div>
         <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">{{ order()!.customerName
             }}</span></div>
-        <div class="info-row"><span class="info-label">Status</span><mat-chip-set><mat-chip>{{ order()!.statusName
+        <div class="info-row"><span class="info-label">Status</span><mat-chip-set><mat-chip
+              [ngClass]="order()!.statusName | statusClass">{{ order()!.statusName
               }}</mat-chip></mat-chip-set></div>
         <div class="info-row"><span class="info-label">Total</span><span class="info-value total-value">{{
             order()!.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>

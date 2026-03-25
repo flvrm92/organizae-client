@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ICustomer } from '../../../../types/ICustomer';
+import { ICustomerSearch } from '../../../../types/ICustomerSearch';
 
 export interface CreateCustomerRequest {
   firstName: string | null;
@@ -39,5 +40,9 @@ export class CustomerService {
 
   delete(id: string): Observable<void> {
     return this.api.delete<void>(`/api/Customer/${id}`);
+  }
+
+  search(q: string): Observable<ICustomerSearch[]> {
+    return this.api.get<ICustomerSearch[]>('/api/Customer/search', { q });
   }
 }

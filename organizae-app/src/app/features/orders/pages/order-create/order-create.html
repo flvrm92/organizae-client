@@ -5,13 +5,16 @@
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Cliente *</mat-label>
-          <mat-select formControlName="customerId">
-            @for (customer of customers(); track customer.id) {
-            <mat-option [value]="customer.id">{{ (customer.firstName ?? '') + ' ' + (customer.lastName ?? '')
-              }}</mat-option>
+          <input matInput [formControl]="customerSearchControl" [matAutocomplete]="customerAuto"
+            placeholder="Digite nome, sobrenome ou documento..." />
+          <mat-icon matSuffix>search</mat-icon>
+          <mat-autocomplete #customerAuto="matAutocomplete" [displayWith]="displayCustomerFn"
+            (optionSelected)="onCustomerSelected($event)">
+            @for (c of customerSearchResults(); track c.id) {
+            <mat-option [value]="c">{{ c.firstName + ' ' + c.lastName }} — {{ c.document }}</mat-option>
             }
-          </mat-select>
-          @if (form.get('customerId')?.hasError('required') && form.get('customerId')?.touched) {
+          </mat-autocomplete>
+          @if (customerSearchControl.hasError('required') && customerSearchControl.touched) {
           <mat-error>Selecione um cliente</mat-error>
           }
         </mat-form-field>

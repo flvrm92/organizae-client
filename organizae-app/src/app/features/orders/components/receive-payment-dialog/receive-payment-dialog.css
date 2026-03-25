@@ -1,0 +1,9 @@
+.full-width {
+  width: 100%;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}

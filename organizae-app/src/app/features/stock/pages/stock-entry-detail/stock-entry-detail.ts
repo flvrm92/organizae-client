@@ -6,14 +6,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CurrencyPipe, DatePipe, SlicePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { IStockEntry } from '../../../../../types/IStockEntry';
 import { StockService } from '../../services/stock.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 
 @Component({
   selector: 'app-stock-entry-detail',
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, DatePipe, SlicePipe, PageHeader],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatProgressSpinnerModule, CurrencyPipe, DatePipe, PageHeader],
   templateUrl: './stock-entry-detail.html',
   styleUrl: './stock-entry-detail.css'
 })
@@ -25,7 +25,7 @@ export class StockEntryDetail implements OnInit {
 
   entry = signal<IStockEntry | null>(null);
   loading = signal(false);
-  movColumns = ['productId', 'quantity', 'costPrice'];
+  movColumns = ['productId', 'quantity', 'value'];
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');

@@ -11,10 +11,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe, DatePipe, SlicePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
+import { StatusClassPipe } from '../../../../shared/pipes/status-class.pipe';
 import { IOrder } from '../../../../../types/IOrder';
 import { OrderService } from '../../services/order.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
+import { ReceivePaymentDialog, ReceivePaymentDialogResult } from '../../components/receive-payment-dialog/receive-payment-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
 
 @Component({
@@ -31,7 +33,9 @@ import { PageHeader } from '../../../../components/page-header/page-header';
     FormsModule,
     CurrencyPipe,
     DatePipe,
-    PageHeader],
+    NgClass,
+    PageHeader,
+    StatusClassPipe],
   templateUrl: './order-list.html',
   styleUrl: './order-list.css'
 })
@@ -88,6 +92,21 @@ export class OrderList implements OnInit {
       this.orderSvc.delete(order.id).subscribe({
         next: () => { this.snackBar.open('Pedido excluído!', 'Fechar', { duration: 3000 }); this.loadOrders(); },
         error: () => this.snackBar.open('Erro ao excluir pedido', 'Fechar', { duration: 3000 })
+      });
+    });
+  }
+
+  receiveOrder(order: IOrder): void {
+    const ref = this.dialog.open(ReceivePaymentDialog, {
+      data: { orderId: order.id, orderCode: order.code, orderTotal: order.subTotal },
+      width: '440px',
+      disableClose: true
+    });
+    ref.afterClosed().subscribe((result: ReceivePaymentDialogResult | false) => {
+      if (!result) return;
+      this.orderSvc.receive(order.id, result.paymentMethodId, result.amount).subscribe({
+        next: () => { this.snackBar.open('Pagamento registrado!', 'Fechar', { duration: 3000 }); this.loadOrders(); },
+        error: () => this.snackBar.open('Erro ao registrar pagamento', 'Fechar', { duration: 3000 })
       });
     });
   }

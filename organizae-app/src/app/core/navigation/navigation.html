@@ -12,7 +12,8 @@
     <mat-nav-list>
       <div class="nav-section-label">Visão Geral</div>
       @for (item of overviewItems; track item.route) {
-      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link" (click)="isHandset && sidenav.close()">
+      <a mat-list-item class="mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+        (click)="isHandset && sidenav.close()">
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle>{{ item.label }}</span>
       </a>
@@ -21,7 +22,8 @@
       <mat-divider></mat-divider>
       <div class="nav-section-label">Cadastros</div>
       @for (item of cadastroItems; track item.route) {
-      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link" (click)="isHandset && sidenav.close()">
+      <a mat-list-item class="mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+        (click)="isHandset && sidenav.close()">
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle>{{ item.label }}</span>
       </a>
@@ -30,7 +32,8 @@
       <mat-divider></mat-divider>
       <div class="nav-section-label">Operações</div>
       @for (item of operacaoItems; track item.route) {
-      <a mat-list-item [routerLink]="item.route" routerLinkActive="active-link" (click)="isHandset && sidenav.close()">
+      <a mat-list-item class="mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+        (click)="isHandset && sidenav.close()">
         <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
         <span matListItemTitle>{{ item.label }}</span>
       </a>

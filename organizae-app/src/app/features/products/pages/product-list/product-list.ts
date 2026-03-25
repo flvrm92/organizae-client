@@ -11,15 +11,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatChipsModule } from '@angular/material/chips';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { IProduct } from '../../../../../types/IProduct';
 import { ProductService } from '../../services/product.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { StatusClassPipe } from '../../../../shared/pipes/status-class.pipe';
 
 @Component({
   selector: 'app-product-list',
-  imports: [RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTooltipModule, MatChipsModule, FormsModule, CurrencyPipe, PageHeader],
+  imports: [RouterLink, MatTableModule, MatButtonModule, MatIconModule, MatInputModule, MatFormFieldModule, MatPaginatorModule, MatTooltipModule, MatChipsModule, FormsModule, CurrencyPipe, NgClass, PageHeader, StatusClassPipe],
   templateUrl: './product-list.html',
   styleUrl: './product-list.css'
 })

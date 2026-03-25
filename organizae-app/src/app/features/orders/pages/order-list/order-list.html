@@ -30,7 +30,8 @@
       <ng-container matColumnDef="statusName">
         <th mat-header-cell *matHeaderCellDef>Status</th>
         <td mat-cell *matCellDef="let row">
-          <mat-chip-set><mat-chip>{{ row.statusName }}</mat-chip></mat-chip-set>
+          <mat-chip-set><mat-chip [ngClass]="row.statusName | statusClass">{{ row.statusName
+              }}</mat-chip></mat-chip-set>
         </td>
       </ng-container>
       <ng-container matColumnDef="createdAt">
@@ -42,6 +43,10 @@
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button [routerLink]="['/pedidos', row.id]"
             matTooltip="Ver detalhes"><mat-icon>visibility</mat-icon></button>
+          @if (row.statusName === 'Ativo') {
+          <button mat-icon-button color="primary" (click)="receiveOrder(row)"
+            matTooltip="Receber pedido"><mat-icon>payments</mat-icon></button>
+          }
           <button mat-icon-button color="warn" (click)="deleteOrder(row)"
             matTooltip="Excluir"><mat-icon>delete</mat-icon></button>
         </td>

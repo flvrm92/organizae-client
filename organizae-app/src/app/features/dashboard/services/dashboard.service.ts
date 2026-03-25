@@ -30,7 +30,7 @@ export class DashboardService {
       map(({ orders, customers, products, stockEntries }) => {
         const statusMap = new Map<string, number>();
         orders.forEach(o => {
-          const status = o.statusId ?? 'unknown';
+          const status = o.statusName ?? 'unknown';
           statusMap.set(status, (statusMap.get(status) ?? 0) + 1);
         });
 

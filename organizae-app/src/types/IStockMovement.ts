@@ -4,6 +4,7 @@ export interface IStockMovementItem {
   quantity: number;
   direction: string | null;
   reason: string | null;
+  value: number | null;
 }
 
 export interface IStockMovement {

@@ -8,14 +8,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
+import { StatusClassPipe } from '../../../../shared/pipes/status-class.pipe';
 import { IOrder } from '../../../../../types/IOrder';
 import { OrderService } from '../../services/order.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 
 @Component({
   selector: 'app-order-detail',
-  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatDividerModule, MatChipsModule, MatProgressSpinnerModule, CurrencyPipe, DatePipe, PageHeader],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, MatTableModule, MatDividerModule, MatChipsModule, MatProgressSpinnerModule, CurrencyPipe, DatePipe, NgClass, PageHeader, StatusClassPipe],
   templateUrl: './order-detail.html',
   styleUrl: './order-detail.css'
 })

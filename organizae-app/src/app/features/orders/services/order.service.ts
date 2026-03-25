@@ -19,6 +19,10 @@ export class OrderService {
     return this.api.post<IOrder>('/api/Order', payload);
   }
 
+  receive(id: string, paymentMethodId: string, amount: number): Observable<boolean> {
+    return this.api.post<boolean>(`/api/Order/${id}/receive`, { paymentMethodId, amount });
+  }
+
   delete(id: string): Observable<void> {
     return this.api.delete<void>(`/api/Order/${id}`);
   }

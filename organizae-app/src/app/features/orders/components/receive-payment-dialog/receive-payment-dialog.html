@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>
+  <mat-icon color="primary">payments</mat-icon>
+  Receber Pedido #{{ data.orderCode }}
+</h2>
+<mat-dialog-content>
+  @if (loading()) {
+  <div class="loading-container">
+    <mat-spinner diameter="40" />
+  </div>
+  } @else {
+  <p class="mb-4">Valor do pedido: <strong>{{ data.orderTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Forma de Pagamento</mat-label>
+    <mat-select [(ngModel)]="selectedPaymentMethodId">
+      @for (pm of paymentMethods(); track pm.id) {
+      <mat-option [value]="pm.id">{{ pm.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancel()">Cancelar</button>
+  <button mat-flat-button color="primary" (click)="confirm()"
+    [disabled]="!selectedPaymentMethodId || loading()">Confirmar Recebimento</button>
+</mat-dialog-actions>

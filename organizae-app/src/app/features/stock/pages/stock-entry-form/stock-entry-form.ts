@@ -1,6 +1,9 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, filter, switchMap } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -15,12 +18,12 @@ import { StockService } from '../../services/stock.service';
 import { SupplierService } from '../../../suppliers/services/supplier.service';
 import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
-import { ISupplier } from '../../../../../types/ISupplier';
+import { ISupplierSearch } from '../../../../../types/ISupplierSearch';
 import { IProduct } from '../../../../../types/IProduct';
 
 @Component({
   selector: 'app-stock-entry-form',
-  imports: [ReactiveFormsModule, RouterLink, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatSelectModule, MatProgressSpinnerModule, MatTableModule, MatDividerModule, PageHeader],
+  imports: [ReactiveFormsModule, RouterLink, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatSelectModule, MatAutocompleteModule, MatProgressSpinnerModule, MatTableModule, MatDividerModule, PageHeader],
   templateUrl: './stock-entry-form.html',
   styleUrl: './stock-entry-form.css'
 })
@@ -31,8 +34,10 @@ export class StockEntryForm implements OnInit {
   private readonly productSvc = inject(ProductService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly destroyRef = inject(DestroyRef);
 
-  suppliers = signal<ISupplier[]>([]);
+  supplierSearchControl = new FormControl('');
+  supplierSearchResults = signal<ISupplierSearch[]>([]);
   products = signal<IProduct[]>([]);
   saving = signal(false);
   movementColumns = ['product', 'quantity', 'costPrice', 'remove'];
@@ -46,9 +51,27 @@ export class StockEntryForm implements OnInit {
   get movements(): FormArray { return this.form.get('movements') as FormArray; }
 
   ngOnInit(): void {
-    this.supplierSvc.getAll().subscribe({ next: (s) => this.suppliers.set(s) });
     this.productSvc.getAll().subscribe({ next: (p) => this.products.set(p) });
     this.addMovement();
+
+    this.supplierSearchControl.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(value => {
+      if (typeof value === 'string') {
+        this.form.patchValue({ supplierId: '' });
+        if (value.length < 3) this.supplierSearchResults.set([]);
+      }
+    });
+
+    this.supplierSearchControl.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      debounceTime(300),
+      filter(v => typeof v === 'string' && v.length >= 3),
+      switchMap(v => this.supplierSvc.search(v as string))
+    ).subscribe({
+      next: results => this.supplierSearchResults.set(results),
+      error: () => this.supplierSearchResults.set([])
+    });
   }
 
   addMovement(): void {
@@ -65,7 +88,21 @@ export class StockEntryForm implements OnInit {
       this.movements.removeAt(index);
   }
 
+  displaySupplierFn(supplier: ISupplierSearch | null): string {
+    return supplier ? supplier.name : '';
+  }
+
+  onSupplierSelected(event: MatAutocompleteSelectedEvent): void {
+    const supplier = event.option.value as ISupplierSearch;
+    this.form.patchValue({ supplierId: supplier.id });
+    this.supplierSearchControl.setErrors(null);
+  }
+
   onSubmit(): void {
+    if (!this.form.value.supplierId) {
+      this.supplierSearchControl.setErrors({ required: true });
+      this.supplierSearchControl.markAsTouched();
+    }
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving.set(true);
     const payload = {

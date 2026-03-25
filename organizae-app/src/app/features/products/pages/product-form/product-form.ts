@@ -10,7 +10,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { ProductService } from '../../services/product.service';
+import { StatusService } from '../../../../core/services/status.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { IStatus } from '../../../../../types/IStatus';
 
 @Component({
   selector: 'app-product-form',
@@ -21,6 +23,7 @@ import { PageHeader } from '../../../../components/page-header/page-header';
 export class ProductForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly productSvc = inject(ProductService);
+  private readonly statusSvc = inject(StatusService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
@@ -29,21 +32,18 @@ export class ProductForm implements OnInit {
   loading = signal(false);
   saving = signal(false);
   isEditMode = signal(false);
+  statuses = signal<IStatus[]>([]);
 
   form = this.fb.group({
     code: [''],
     name: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
     price: [0, [Validators.required, Validators.min(0)]],
-    statusId: ['active', Validators.required]
+    statusId: ['', Validators.required]
   });
 
-  statusOptions = [
-    { value: 'active', label: 'Ativo' },
-    { value: 'inactive', label: 'Inativo' }
-  ];
-
   ngOnInit(): void {
+    this.statusSvc.getAll().subscribe(s => this.statuses.set(s));
     const id = this.route.snapshot.paramMap.get('id');
     if (id) { this.productId.set(id); this.isEditMode.set(true); this.loadProduct(id); }
   }
