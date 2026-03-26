@@ -11,8 +11,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { ProductService } from '../../services/product.service';
 import { StatusService } from '../../../../core/services/status.service';
+import { UnitOfMeasureService } from '../../../../core/services/unit-of-measure.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { IStatus } from '../../../../../types/IStatus';
+import { IUnitOfMeasure } from '../../../../../types/IUnitOfMeasure';
 
 @Component({
   selector: 'app-product-form',
@@ -24,26 +26,34 @@ export class ProductForm implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly productSvc = inject(ProductService);
   private readonly statusSvc = inject(StatusService);
+  private readonly unitOfMeasureSvc = inject(UnitOfMeasureService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
+
+  private readonly productStatuses = ['Ativo', 'Inativo'];
 
   productId = signal<string | null>(null);
   loading = signal(false);
   saving = signal(false);
   isEditMode = signal(false);
   statuses = signal<IStatus[]>([]);
+  units = signal<IUnitOfMeasure[]>([]);
 
   form = this.fb.group({
-    code: [''],
+    code: ['', Validators.required],
     name: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
     price: [0, [Validators.required, Validators.min(0)]],
-    statusId: ['', Validators.required]
+    statusId: ['', Validators.required],
+    unitOfMeasureId: [null as string | null],
+    size: [null as string | null],
+    color: [null as string | null]
   });
 
   ngOnInit(): void {
-    this.statusSvc.getAll().subscribe(s => this.statuses.set(s));
+    this.statusSvc.getAll().subscribe(s => this.statuses.set(s.filter(x => this.productStatuses.includes(x.name))));
+    this.unitOfMeasureSvc.getAll().subscribe(u => this.units.set(u));
     const id = this.route.snapshot.paramMap.get('id');
     if (id) { this.productId.set(id); this.isEditMode.set(true); this.loadProduct(id); }
   }
@@ -51,7 +61,7 @@ export class ProductForm implements OnInit {
   loadProduct(id: string): void {
     this.loading.set(true);
     this.productSvc.getById(id).subscribe({
-      next: (p) => { this.form.patchValue({ code: p.code, name: p.name, description: p.description, price: p.price, statusId: p.statusId }); this.loading.set(false); },
+      next: (p) => { this.form.patchValue({ code: p.code, name: p.name, description: p.description, price: p.price, statusId: p.statusId, unitOfMeasureId: p.unitOfMeasureId, size: p.size, color: p.color }); this.loading.set(false); },
       error: () => { this.loading.set(false); this.snackBar.open('Erro ao carregar produto', 'Fechar', { duration: 3000 }); this.router.navigate(['/produtos']); }
     });
   }

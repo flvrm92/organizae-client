@@ -36,7 +36,7 @@ export class ProductList implements OnInit {
   searchTerm = '';
   pageSize = 20;
   pageIndex = 0;
-  displayedColumns = ['code', 'name', 'price', 'status', 'actions'];
+  displayedColumns = ['code', 'name', 'price', 'unitOfMeasure', 'size', 'color', 'status', 'actions'];
 
   ngOnInit(): void { this.loadProducts(); }
 

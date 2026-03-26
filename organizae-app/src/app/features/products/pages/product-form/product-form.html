@@ -43,6 +43,23 @@
               }
             </mat-select>
           </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Unidade de Medida</mat-label>
+            <mat-select formControlName="unitOfMeasureId">
+              <mat-option [value]="null">—</mat-option>
+              @for (u of units(); track u.id) {
+              <mat-option [value]="u.id">{{ u.name }} ({{ u.abbreviation }})</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Tamanho</mat-label>
+            <input matInput formControlName="size" placeholder="Ex: P, M, G, 42..." />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cor</mat-label>
+            <input matInput formControlName="color" placeholder="Ex: Azul, Vermelho..." />
+          </mat-form-field>
         </div>
         <div class="form-actions">
           <button mat-button type="button" routerLink="/produtos">Cancelar</button>

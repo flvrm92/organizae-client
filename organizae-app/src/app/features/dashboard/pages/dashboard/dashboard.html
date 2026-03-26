@@ -100,7 +100,8 @@
           @for (order of s.recentOrders; track order.id) {
           <tr>
             <td class="mono">{{ order.code }}</td>
-            <td>{{ order.statusName }}</td>
+            <td><mat-chip-set><mat-chip [ngClass]="order.statusName | statusClass">{{ order.statusName
+                  }}</mat-chip></mat-chip-set></td>
             <td>{{ order.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
             <td>{{ order.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</td>
           </tr>

@@ -58,8 +58,17 @@ export class OrderList implements OnInit {
   loadOrders(): void {
     this.loading.set(true);
     this.orderSvc.getAll().subscribe({
-      next: (data) => { this.orders.set(data); this.applyFilter(); this.loading.set(false); },
-      error: () => { this.loading.set(false); this.snackBar.open('Erro ao carregar pedidos', 'Fechar', { duration: 3000 }); }
+      next: (data) => {
+        this.orders.set(data.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
+        this.applyFilter();
+        this.loading.set(false);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.snackBar.open('Erro ao carregar pedidos', 'Fechar', {
+          duration: 3000
+        });
+      }
     });
   }
 
@@ -78,20 +87,20 @@ export class OrderList implements OnInit {
 
   onPage(event: PageEvent): void { this.pageSize = event.pageSize; this.pageIndex = event.pageIndex; this.updatePage(); }
 
-  deleteOrder(order: IOrder): void {
+  cancelOrder(order: IOrder): void {
     const ref = this.dialog.open(ConfirmDialog, {
       data: {
-        title: 'Excluir Pedido',
-        message: `Deseja excluir o pedido #${order.id.substring(0, 8)}...?`,
-        confirmLabel: 'Excluir'
+        title: 'Cancelar Pedido',
+        message: `Deseja cancelar o pedido #${order.id.substring(0, 8)}...?`,
+        confirmLabel: 'Cancelar'
       },
       width: '400px'
     });
     ref.afterClosed().subscribe(confirmed => {
       if (!confirmed) return;
-      this.orderSvc.delete(order.id).subscribe({
-        next: () => { this.snackBar.open('Pedido excluído!', 'Fechar', { duration: 3000 }); this.loadOrders(); },
-        error: () => this.snackBar.open('Erro ao excluir pedido', 'Fechar', { duration: 3000 })
+      this.orderSvc.cancel(order.id).subscribe({
+        next: () => { this.snackBar.open('Pedido cancelado!', 'Fechar', { duration: 3000 }); this.loadOrders(); },
+        error: () => this.snackBar.open('Erro ao cancelar pedido', 'Fechar', { duration: 3000 })
       });
     });
   }

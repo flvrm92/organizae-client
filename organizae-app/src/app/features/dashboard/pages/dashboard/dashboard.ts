@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { NgxChartsModule, Color, ScaleType, LegendPosition } from '@swimlane/ngx-charts';
 import { DashboardService, DashboardStats } from '../../services/dashboard.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { StatusClassPipe } from "../../../../shared/pipes/status-class.pipe";
+import { MatChipsModule } from "@angular/material/chips";
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +22,9 @@ import { PageHeader } from '../../../../components/page-header/page-header';
     MatIconModule,
     MatDividerModule,
     NgxChartsModule,
-    PageHeader
+    PageHeader,
+    StatusClassPipe,
+    MatChipsModule
   ],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'

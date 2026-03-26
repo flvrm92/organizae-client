@@ -23,7 +23,8 @@ export class OrderService {
     return this.api.post<boolean>(`/api/Order/${id}/receive`, { paymentMethodId, amount });
   }
 
-  delete(id: string): Observable<void> {
-    return this.api.delete<void>(`/api/Order/${id}`);
+  cancel(id: string): Observable<void> {
+    return this.api.post<void>(`/api/Order/${id}/cancel`, {});
   }
+
 }

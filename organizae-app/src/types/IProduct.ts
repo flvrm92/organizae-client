@@ -7,4 +7,9 @@ export interface IProduct {
   statusId: string;
   statusName: string | null;
   price: number;
+  unitOfMeasureId: string | null;
+  unitOfMeasureName: string | null;
+  unitOfMeasureAbbreviation: string | null;
+  size: string | null;
+  color: string | null;
 }
