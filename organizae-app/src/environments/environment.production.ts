@@ -1,5 +1,5 @@
 import { AppEnvironment } from '../app/config/environment.token';
 
 export const environment: AppEnvironment = {
-  apiUrl: 'https://api-dev.organizae.app.br',
+  apiUrl: 'https://api.organizae.app.br',
 };
