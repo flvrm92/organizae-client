@@ -9,9 +9,9 @@ COPY . .
 
 ARG BUILD_ENV=production
 ARG API_URL=https://localhost:7006
-RUN sed -i "s|apiUrl: '.*'|apiUrl: '${API_URL}'|g" src/environments/environment.ts src/environments/environment.development.ts
+RUN sed -i "s|apiUrl: '.*'|apiUrl: '${API_URL}'|g" src/environments/environment.ts src/environments/environment.development.ts src/environments/environment.production.ts
 
-RUN npm run build --configuration ${BUILD_ENV}
+RUN npm run build -- --configuration ${BUILD_ENV}
 
 # Runtime stage
 FROM nginx:alpine AS runtime
