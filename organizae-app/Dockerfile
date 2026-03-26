@@ -2,7 +2,7 @@
 FROM node:24.2.0 AS build
 WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .npmrc ./
 RUN npm ci
 
 COPY . .
