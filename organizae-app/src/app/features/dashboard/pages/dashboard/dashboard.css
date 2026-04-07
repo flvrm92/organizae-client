@@ -1,50 +1,74 @@
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
 .kpi-card {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+
   mat-card-content {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    padding: 1.5rem 1rem !important;
-    gap: 0.5rem;
+    gap: 1.25rem;
+    padding: 1.25rem 1.5rem !important;
   }
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+}
+
+.kpi-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .kpi-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+
   mat-icon {
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
     color: white;
   }
 }
 
-.kpi-icon.orders   { background: #1976D2; }
-.kpi-icon.customers { background: #43A047; }
-.kpi-icon.products  { background: #FB8C00; }
-.kpi-icon.stock     { background: #8E24AA; }
+.kpi-icon.orders {
+  background: linear-gradient(135deg, #5146e8, #7c3aed);
+}
+
+.kpi-icon.customers {
+  background: linear-gradient(135deg, #0f9484, #14b8a6);
+}
+
+.kpi-icon.products {
+  background: linear-gradient(135deg, #d97706, #f59e0b);
+}
+
+.kpi-icon.stock {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
 
 .kpi-value {
-  font-size: 2rem;
+  font-size: 1.75rem;
   font-weight: 700;
   line-height: 1;
+  color: var(--app-text);
 }
 
 .kpi-label {
-  font-size: 0.875rem;
-  opacity: 0.7;
-  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--app-text-secondary);
 }
 
 .charts-grid {
@@ -52,6 +76,11 @@
   grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+.chart-card mat-card-header {
+  border-bottom: 1px solid var(--app-border);
+  padding-bottom: 0.75rem;
 }
 
 .chart-card .chart-content {
@@ -78,7 +107,8 @@
   border-collapse: collapse;
   margin-top: 0.5rem;
 
-  th, td {
+  th,
+  td {
     text-align: left;
     padding: 0.6rem 1rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
@@ -87,8 +117,8 @@
 
   th {
     font-weight: 600;
-    opacity: 0.7;
-    font-size: 0.8rem;
+    color: var(--app-primary);
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }

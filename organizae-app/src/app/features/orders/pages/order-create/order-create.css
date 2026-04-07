@@ -1,9 +1,65 @@
-.full-width {
-  width: 100%;
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--app-primary);
+  border-left: 3px solid var(--app-primary);
+  padding-left: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-section-title mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--app-primary);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.field-full {
+  grid-column: 1 / -1;
 }
 
 .section-divider {
-  margin: 1rem 0;
+  margin: 1.5rem 0;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--app-primary-dim);
+}
+
+.form-actions button[color="primary"] {
+  min-width: 140px;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+.full-width {
+  width: 100%;
 }
 
 .items-header {
@@ -15,6 +71,8 @@
 
 .items-header h3 {
   margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
 }
 
 .items-table {
@@ -36,8 +94,8 @@
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
-  background: var(--app-surface, #f5f5f5);
+  padding: 1rem 1.25rem;
+  background: var(--app-primary-dim);
   border-radius: 8px;
   margin-bottom: 1rem;
 }
@@ -45,16 +103,11 @@
 .total-label {
   font-size: 1rem;
   font-weight: 500;
+  color: var(--app-primary);
 }
 
 .total-value {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1976d2;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  color: var(--app-primary);
 }

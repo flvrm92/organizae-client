@@ -64,9 +64,14 @@
                   "with": "src/environments/environment.development.ts"
                 }
               ]
+            },
+            "local": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "local"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
@@ -76,9 +81,12 @@
             },
             "development": {
               "buildTarget": "organizae-app:build:development"
+            },
+            "local": {
+              "buildTarget": "organizae-app:build"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "local"
         },
         "test": {
           "builder": "@angular/build:unit-test"

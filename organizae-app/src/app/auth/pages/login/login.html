@@ -1,4 +1,5 @@
 <div class="login-container">
+  <div class="login-bg-decoration"></div>
   <div class="theme-toggle-corner">
     <app-theme-toggle />
   </div>
@@ -6,6 +7,7 @@
   <mat-card class="login-card">
     <mat-card-header>
       <div class="login-logo">
+        <div class="logo-icon-ring"><mat-icon>store</mat-icon></div>
         <span class="logo-text">Organizae</span>
         <span class="logo-subtitle">Gestão de Lojas</span>
       </div>
@@ -36,7 +38,7 @@
             <mat-error>Senha é obrigatória</mat-error>
           }
           @if (form.get('password')?.hasError('minlength') && form.get('password')?.touched) {
-            <mat-error>Senha deve ter pelo menos 4 caracteres</mat-error>
+            <mat-error>Senha deve ter pelo menos 4 caracteres</mat-error>       
           }
         </mat-form-field>
 

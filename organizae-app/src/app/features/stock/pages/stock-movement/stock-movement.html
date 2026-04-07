@@ -22,7 +22,7 @@
     </button>
   </div>
 
-  <div class="table-container">
+  <div class="table-container card-elevated">
     <table mat-table [dataSource]="pagedMovements()" class="full-width-table">
       <ng-container matColumnDef="productName">
         <th mat-header-cell *matHeaderCellDef>Produto</th>
@@ -44,7 +44,14 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
-          @if (loading()) { Carregando... } @else { Nenhuma movimentação encontrada }
+          @if (loading()) {
+          Carregando...
+          } @else {
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Nenhuma movimentação encontrada</span>
+          </div>
+          }
         </td>
       </tr>
     </table>

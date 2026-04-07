@@ -5,19 +5,17 @@
   <div class="loading-center"><mat-spinner diameter="40" /></div>
   } @else if (entry()) {
   <div class="detail-grid">
-    <mat-card>
+    <mat-card class="card-elevated">
       <mat-card-header><mat-card-title>Informações</mat-card-title></mat-card-header>
       <mat-card-content>
-        <div class="info-row"><span class="info-label">Código</span><span class="id-value">{{ entry()!.code }}</span>
-        </div>
-        <div class="info-row"><span class="info-label">Fornecedor</span><span>{{ entry()!.supplierName ??
-            entry()!.supplierId }}</span></div>
+        <div class="info-row"><span class="info-label">Código</span><span class="id-value">{{ entry()!.code }}</span></div>
+        <div class="info-row"><span class="info-label">Fornecedor</span><span>{{ entry()!.supplierName ?? entry()!.supplierId }}</span></div>
         <div class="info-row"><span class="info-label">Data</span>
           <span>{{ entry()!.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span>
         </div>
       </mat-card-content>
     </mat-card>
-    <mat-card>
+    <mat-card class="card-elevated">
       <mat-card-header><mat-card-title>Produtos</mat-card-title></mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="entry()!.movements ?? []" class="full-width-table">

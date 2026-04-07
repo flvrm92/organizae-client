@@ -5,28 +5,21 @@
   <div class="loading-center"><mat-spinner diameter="40" /></div>
   } @else if (order()) {
   <div class="detail-grid">
-    <mat-card class="info-card">
+    <mat-card class="info-card card-elevated">
       <mat-card-header><mat-card-title>Informações do Pedido</mat-card-title></mat-card-header>
       <mat-card-content>
-        <div class="info-row"><span class="info-label">Código</span><span class="info-value id-value">{{ order()!.code
-            }}</span></div>
-        <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">{{ order()!.customerName
-            }}</span></div>
-        <div class="info-row"><span class="info-label">Status</span><mat-chip-set><mat-chip
-              [ngClass]="order()!.statusName | statusClass">{{ order()!.statusName
-              }}</mat-chip></mat-chip-set></div>
-        <div class="info-row"><span class="info-label">Total</span><span class="info-value total-value">{{
-            order()!.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
-        <div class="info-row"><span class="info-label">Criado em</span><span class="info-value">{{ order()!.createdAt |
-            date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
+        <div class="info-row"><span class="info-label">Código</span><span class="info-value id-value">{{ order()!.code }}</span></div>
+        <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">{{ order()!.customerName }}</span></div>
+        <div class="info-row"><span class="info-label">Status</span><mat-chip-set><mat-chip [ngClass]="order()!.statusName | statusClass">{{ order()!.statusName }}</mat-chip></mat-chip-set></div>
+        <div class="info-row"><span class="info-label">Total</span><span class="info-value total-value">{{ order()!.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
+        <div class="info-row"><span class="info-label">Criado em</span><span class="info-value">{{ order()!.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
         @if (order()!.updatedAt) {
-        <div class="info-row"><span class="info-label">Atualizado em</span><span class="info-value">{{
-            order()!.updatedAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
+        <div class="info-row"><span class="info-label">Atualizado em</span><span class="info-value">{{ order()!.updatedAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
         }
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="items-card">
+    <mat-card class="items-card card-elevated">
       <mat-card-header><mat-card-title>Itens do Pedido</mat-card-title></mat-card-header>
       <mat-card-content>
         <table mat-table [dataSource]="order()!.orderItems ?? []" class="full-width-table">
