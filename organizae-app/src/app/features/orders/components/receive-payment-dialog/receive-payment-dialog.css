@@ -1,9 +1,20 @@
 .full-width {
   width: 100%;
+  margin-top: 0.75rem;
 }
 
 .loading-container {
   display: flex;
   justify-content: center;
   padding: 24px 0;
+}
+
+.order-total {
+  font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
+}
+
+.order-total strong {
+  color: var(--app-primary);
+  font-weight: 700;
 }

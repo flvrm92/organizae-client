@@ -1,5 +1,6 @@
 @import 'tailwindcss';
-@import '@angular/material/prebuilt-themes/azure-blue.css';
+@import '@angular/material/prebuilt-themes/indigo-pink.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ─── Base resets ──────────────────────────────────────────── */
 *,
@@ -12,7 +13,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', 'Roboto', 'Helvetica Neue', sans-serif;
 }
 
 app-root {
@@ -23,20 +24,32 @@ app-root {
 
 /* ─── Light theme (default) ─────────────────────────────────── */
 :root {
-  --app-bg: #f5f5f5;
+  --app-bg: #f8f9fc;
   --app-surface: #ffffff;
-  --app-text: #1a1a1a;
-  --app-text-secondary: #666666;
-  --app-border: #e0e0e0;
+  --app-text: #111827;
+  --app-text-secondary: #6b7280;
+  --app-border: #e5e7eb;
   --app-sidenav-bg: #ffffff;
   --app-toolbar-bg: #ffffff;
+  --app-primary: #5146e8;
+  --app-primary-dim: #ede9fe;
+  --app-accent: #0f9484;
+
+  --mat-sys-primary: #5146e8;
+  --mat-sys-on-primary: #ffffff;
+  --mat-sys-primary-container: #ede9fe;
+  --mat-sys-on-primary-container: #160067;
+  --mat-sys-inverse-primary: #bdb4ff;
+  --mat-sys-secondary: #0f9484;
+  --mat-sys-on-secondary: #ffffff;
+  --mat-sys-secondary-container: #b2efe7;
+  --mat-sys-on-secondary-container: #00201c;
 }
 
 /* ─── Dark theme ─────────────────────────────────────────────── */
 html.dark {
   color-scheme: dark;
 
-  /* App-level custom tokens */
   --app-bg: #101418;
   --app-surface: #1d2125;
   --app-text: #e1e2e8;
@@ -44,8 +57,10 @@ html.dark {
   --app-border: #42474e;
   --app-sidenav-bg: #1d2125;
   --app-toolbar-bg: #1d2125;
+  --app-primary: #bdb4ff;
+  --app-primary-dim: #3b2dc3;
+  --app-accent: #81d3c9;
 
-  /* M3 system tokens — override the azure-blue prebuilt light values */
   --mat-sys-background: #101418;
   --mat-sys-on-background: #e1e2e8;
   --mat-sys-surface: #101418;
@@ -63,34 +78,29 @@ html.dark {
   --mat-sys-outline-variant: #42474e;
   --mat-sys-shadow: #000000;
   --mat-sys-scrim: #000000;
-  --mat-sys-surface-tint: #97cbff;
+  --mat-sys-surface-tint: #bdb4ff;
 
-  /* Primary — azure blue dark palette */
-  --mat-sys-primary: #97cbff;
-  --mat-sys-on-primary: #003257;
-  --mat-sys-primary-container: #004a7f;
-  --mat-sys-on-primary-container: #cee5ff;
-  --mat-sys-inverse-primary: #0061a4;
+  --mat-sys-primary: #bdb4ff;
+  --mat-sys-on-primary: #2700b3;
+  --mat-sys-primary-container: #3b2dc3;
+  --mat-sys-on-primary-container: #e8e4ff;
+  --mat-sys-inverse-primary: #5146e8;
 
-  /* Secondary */
-  --mat-sys-secondary: #bccbda;
-  --mat-sys-on-secondary: #263544;
-  --mat-sys-secondary-container: #3c4b5b;
-  --mat-sys-on-secondary-container: #d8e7f7;
+  --mat-sys-secondary: #81d3c9;
+  --mat-sys-on-secondary: #003831;
+  --mat-sys-secondary-container: #005047;
+  --mat-sys-on-secondary-container: #b2efe7;
 
-  /* Tertiary */
   --mat-sys-tertiary: #d6beea;
   --mat-sys-on-tertiary: #3b2951;
   --mat-sys-tertiary-container: #533f69;
   --mat-sys-on-tertiary-container: #f2daf7;
 
-  /* Error */
   --mat-sys-error: #ffb4ab;
   --mat-sys-on-error: #690005;
   --mat-sys-error-container: #93000a;
   --mat-sys-on-error-container: #ffdad6;
 
-  /* Angular Material app-level tokens */
   --mat-app-background-color: #101418;
   --mat-app-text-color: #e1e2e8;
 }
@@ -122,7 +132,6 @@ html.dark .mat-toolbar {
   --mat-toolbar-container-text-color: #e1e2e8;
 }
 
-/* Cards */
 html.dark .mat-mdc-card {
   --mdc-elevated-card-container-color: #1d2125;
   --mdc-outlined-card-container-color: #1d2125;
@@ -130,7 +139,6 @@ html.dark .mat-mdc-card {
   color: var(--app-text);
 }
 
-/* Table */
 html.dark .mat-mdc-table {
   --mat-table-background-color: #1d2125;
   --mat-table-row-item-label-text-color: #e1e2e8;
@@ -155,7 +163,6 @@ html.dark .mat-mdc-header-cell {
   color: #c2c7cf;
 }
 
-/* Paginator */
 html.dark .mat-mdc-paginator {
   --mat-paginator-container-background-color: #1d2125;
   --mat-paginator-container-text-color: #e1e2e8;
@@ -164,30 +171,113 @@ html.dark .mat-mdc-paginator {
   color: #e1e2e8;
 }
 
-/* Form fields */
 html.dark .mat-mdc-form-field {
   --mdc-outlined-text-field-input-text-color: #e1e2e8;
   --mdc-outlined-text-field-label-text-color: #c2c7cf;
-  --mdc-outlined-text-field-focus-label-text-color: #97cbff;
+  --mdc-outlined-text-field-focus-label-text-color: #bdb4ff;
   --mdc-outlined-text-field-outline-color: #8c9198;
   --mdc-outlined-text-field-hover-outline-color: #c2c7cf;
-  --mdc-outlined-text-field-focus-outline-color: #97cbff;
-  --mdc-outlined-text-field-caret-color: #97cbff;
+  --mdc-outlined-text-field-focus-outline-color: #bdb4ff;
+  --mdc-outlined-text-field-caret-color: #bdb4ff;
   --mdc-outlined-text-field-disabled-outline-color: #42474e;
   --mdc-filled-text-field-input-text-color: #e1e2e8;
   --mdc-filled-text-field-label-text-color: #c2c7cf;
-  --mdc-filled-text-field-focus-label-text-color: #97cbff;
+  --mdc-filled-text-field-focus-label-text-color: #bdb4ff;
   --mdc-filled-text-field-container-color: #272b2f;
   --mdc-filled-text-field-active-indicator-color: #8c9198;
-  --mdc-filled-text-field-focus-active-indicator-color: #97cbff;
-  --mdc-filled-text-field-caret-color: #97cbff;
+  --mdc-filled-text-field-focus-active-indicator-color: #bdb4ff;
+  --mdc-filled-text-field-caret-color: #bdb4ff;
 }
 
-/* Select */
+/* Dark mode -- direct element overrides for form fields (prebuilt theme specificity fix) */
+html.dark .mat-mdc-form-field .mdc-text-field--outlined .mdc-text-field__input,
+html.dark .mat-mdc-form-field .mdc-text-field--filled .mdc-text-field__input,
+html.dark .mat-mdc-form-field .mat-mdc-input-element,
+html.dark .mdc-text-field__input,
+html.dark input.mat-mdc-input-element,
+html.dark textarea.mat-mdc-input-element {
+  color: #e1e2e8 !important;
+  -webkit-text-fill-color: #e1e2e8 !important;
+}
+
+html.dark .mat-mdc-form-field .mdc-floating-label,
+html.dark .mat-mdc-form-field .mat-mdc-floating-label,
+html.dark .mdc-floating-label,
+html.dark .mat-mdc-form-field label {
+  color: #c2c7cf !important;
+}
+
+html.dark .mat-mdc-form-field .mdc-floating-label--float-above,
+html.dark .mat-mdc-form-field .mat-mdc-floating-label--float-above {
+  color: #c2c7cf !important;
+}
+
+html.dark .mat-mdc-form-field.mat-focused .mdc-floating-label,
+html.dark .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: #bdb4ff !important;
+}
+
+html.dark .mat-mdc-form-field .mat-mdc-form-field-hint,
+html.dark .mat-mdc-form-field .mat-mdc-form-field-error {
+  color: #c2c7cf !important;
+}
+
+html.dark .mat-mdc-form-field .mat-icon,
+html.dark .mat-mdc-form-field .mat-mdc-form-field-icon-prefix .mat-icon,
+html.dark .mat-mdc-form-field .mat-mdc-form-field-icon-suffix .mat-icon {
+  color: #c2c7cf !important;
+}
+
+html.dark .mat-mdc-select-value-text {
+  color: #e1e2e8 !important;
+}
+
+html.dark .mat-mdc-select-arrow {
+  color: #c2c7cf !important;
+}
+
+/* Dark mode -- general text elements */
+html.dark p,
+html.dark span,
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark label,
+html.dark div {
+  color: inherit;
+}
+
+html.dark .mat-mdc-card-title,
+html.dark .mat-mdc-card-subtitle {
+  color: #e1e2e8 !important;
+}
+
+html.dark .mat-mdc-card-content {
+  color: #e1e2e8;
+}
+
+/* Dark mode -- checkbox and radio */
+html.dark .mat-mdc-checkbox .mdc-label,
+html.dark .mat-mdc-radio-button .mdc-label {
+  color: #e1e2e8 !important;
+}
+
+/* Dark mode -- autocomplete panel */
+html.dark .mat-mdc-autocomplete-panel {
+  background-color: #272b2f !important;
+}
+
+html.dark .mat-mdc-autocomplete-panel .mat-mdc-option {
+  color: #e1e2e8 !important;
+}
+
 html.dark .mat-mdc-select {
   --mat-select-trigger-text-color: #e1e2e8;
   --mat-select-enabled-arrow-color: #c2c7cf;
-  --mat-select-focused-arrow-color: #97cbff;
+  --mat-select-focused-arrow-color: #bdb4ff;
   --mat-select-invalid-arrow-color: #ffb4ab;
 }
 
@@ -198,14 +288,13 @@ html.dark .cdk-overlay-pane .mat-mdc-select-panel {
 
 html.dark .mat-mdc-option {
   --mat-option-label-text-color: #e1e2e8;
-  --mat-option-selected-state-label-text-color: #97cbff;
+  --mat-option-selected-state-label-text-color: #bdb4ff;
   --mat-option-hover-state-layer-color: rgba(255, 255, 255, 0.08);
   --mat-option-focus-state-layer-color: rgba(255, 255, 255, 0.12);
   --mat-option-selected-state-layer-color: rgba(151, 203, 255, 0.12);
   color: #e1e2e8;
 }
 
-/* Menu */
 html.dark .mat-mdc-menu-panel {
   --mat-menu-container-color: #272b2f;
   background-color: #272b2f !important;
@@ -222,7 +311,6 @@ html.dark .mat-mdc-menu-item .mat-icon {
   color: #c2c7cf;
 }
 
-/* Dialog */
 html.dark .mat-mdc-dialog-container .mdc-dialog__surface {
   --mdc-dialog-container-color: #1d2125;
   background-color: #1d2125 !important;
@@ -234,7 +322,6 @@ html.dark .mat-mdc-dialog-container {
   color: #e1e2e8;
 }
 
-/* List items (nav list in sidenav) */
 html.dark .mat-mdc-list-item,
 html.dark .mat-mdc-nav-list .mat-mdc-list-item {
   --mdc-list-list-item-label-text-color: #e1e2e8;
@@ -245,7 +332,6 @@ html.dark .mat-mdc-nav-list .mat-mdc-list-item {
   color: #e1e2e8;
 }
 
-/* Chips */
 html.dark .mat-mdc-chip {
   --mat-chip-label-text-color: #e1e2e8;
   --mat-chip-elevated-container-color: #32363a;
@@ -254,7 +340,6 @@ html.dark .mat-mdc-chip {
   outline-color: #42474e;
 }
 
-/* Snackbar */
 html.dark .mdc-snackbar__surface {
   background-color: #32363a !important;
 }
@@ -264,34 +349,53 @@ html.dark .mat-mdc-snack-bar-container .mdc-snackbar__label {
 }
 
 html.dark .mat-mdc-snack-bar-action {
-  color: #97cbff !important;
+  color: #bdb4ff !important;
 }
 
-/* Divider */
 html.dark .mat-divider {
   border-color: #42474e;
 }
 
-/* Progress spinner */
 html.dark .mat-mdc-progress-spinner {
-  --mdc-circular-progress-active-indicator-color: #97cbff;
+  --mdc-circular-progress-active-indicator-color: #bdb4ff;
 }
 
-/* Progress bar */
 html.dark .mat-mdc-progress-bar {
-  --mat-progress-bar-active-indicator-color: #97cbff;
+  --mat-progress-bar-active-indicator-color: #bdb4ff;
   --mat-progress-bar-track-color: #004a7f;
 }
 
-/* Tooltip */
 html.dark .mdc-tooltip__surface {
   background-color: #e1e2e8 !important;
   color: #1d2125 !important;
 }
 
-/* Icon buttons in dark mode */
 html.dark .mat-mdc-icon-button {
   color: #c2c7cf;
+}
+
+/* Dark mode list items — force text and icon colors */
+html.dark .mat-mdc-list-item,
+html.dark .mat-mdc-nav-list .mat-mdc-list-item {
+  --mdc-list-list-item-label-text-color: #e1e2e8 !important;
+  --mdc-list-list-item-supporting-text-color: #c2c7cf !important;
+  --mdc-list-list-item-leading-icon-color: #c2c7cf !important;
+  --mdc-list-list-item-hover-state-layer-color: rgba(255, 255, 255, 0.08);
+  --mdc-list-list-item-focus-state-layer-color: rgba(255, 255, 255, 0.12);
+  color: #e1e2e8 !important;
+}
+
+html.dark .mat-mdc-list-item .mdc-list-item__primary-text {
+  color: #e1e2e8 !important;
+}
+
+html.dark .mat-mdc-list-item .mat-icon,
+html.dark .mat-mdc-nav-list .mat-mdc-list-item .mat-icon {
+  color: #c2c7cf !important;
+}
+
+html.dark .mat-mdc-icon-button .mat-icon {
+  color: inherit;
 }
 
 /* ─── Status chips ──────────────────────────────────────────── */
@@ -311,8 +415,8 @@ mat-chip.status-pending {
 }
 
 mat-chip.status-completed {
-  --mat-chip-elevated-container-color: #e3f2fd;
-  --mat-chip-label-text-color: #1565c0;
+  --mat-chip-elevated-container-color: #ede9fe;
+  --mat-chip-label-text-color: #4338ca;
 }
 
 mat-chip.status-cancelled {
@@ -336,8 +440,8 @@ html.dark mat-chip.status-pending {
 }
 
 html.dark mat-chip.status-completed {
-  --mat-chip-elevated-container-color: #0d47a1;
-  --mat-chip-label-text-color: #90caf9;
+  --mat-chip-elevated-container-color: #3b2dc3;
+  --mat-chip-label-text-color: #e8e4ff;
 }
 
 html.dark mat-chip.status-cancelled {
@@ -366,17 +470,18 @@ html.dark mat-chip.status-cancelled {
 
 /* ─── Utilities ─────────────────────────────────────────────── */
 .page-container {
-  padding: 24px;
+  padding: 1.5rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 1rem;
   height: 100%;
 }
 
 .table-container {
   overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+  background: var(--app-surface);
 }
 
 .full-width {
@@ -390,4 +495,40 @@ html.dark mat-chip.status-cancelled {
 .mat-column-actions {
   width: 120px;
   text-align: right;
+}
+
+.card-elevated {
+  border-radius: 12px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.mat-mdc-row:hover {
+  background-color: rgba(81, 70, 232, 0.04) !important;
+}
+
+html.dark .mat-mdc-row:hover {
+  background-color: rgba(189, 180, 255, 0.06) !important;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  padding: 3rem;
+}
+
+/* Form action button alignment */
+.form-actions {
+  align-items: center;
+}
+
+/* Action column — keep buttons side by side */
+.mat-column-actions {
+  width: 120px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Filter row button alignment */
+.filter-row {
+  align-items: center;
 }

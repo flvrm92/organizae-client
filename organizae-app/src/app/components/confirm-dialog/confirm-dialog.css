@@ -2,8 +2,24 @@ h2[mat-dialog-title] {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding-top: 0.5rem;
 }
+
+.dialog-icon-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 mat-dialog-content p {
   margin: 0;
   color: var(--app-text-secondary, #555);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+mat-dialog-actions {
+  padding: 0.75rem 1.5rem 1.25rem;
+  gap: 0.5rem;
+  display: flex;
 }

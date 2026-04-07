@@ -5,7 +5,7 @@
     </button>
   </app-page-header>
 
-  <div class="table-container">
+  <div class="table-container card-elevated">
     <table mat-table [dataSource]="pagedEntries()" class="full-width-table">
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef>Código</th>
@@ -35,7 +35,12 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">Nenhuma entrada encontrada</td>
+        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Nenhuma entrada encontrada</span>
+          </div>
+        </td>
       </tr>
     </table>
     <mat-paginator [length]="entries().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]"

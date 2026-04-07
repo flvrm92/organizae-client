@@ -8,35 +8,43 @@
   } @else if (stats(); as s) {
   <!-- KPI Cards -->
   <div class="kpi-grid">
-    <mat-card class="kpi-card">
+    <mat-card class="kpi-card card-elevated">
       <mat-card-content>
         <div class="kpi-icon orders"><mat-icon>receipt_long</mat-icon></div>
-        <div class="kpi-value">{{ s.totalOrders }}</div>
-        <div class="kpi-label">Pedidos</div>
+        <div class="kpi-text">
+          <div class="kpi-value">{{ s.totalOrders }}</div>
+          <div class="kpi-label">Pedidos</div>
+        </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="kpi-card">
+    <mat-card class="kpi-card card-elevated">
       <mat-card-content>
         <div class="kpi-icon customers"><mat-icon>people</mat-icon></div>
-        <div class="kpi-value">{{ s.totalCustomers }}</div>
-        <div class="kpi-label">Clientes</div>
+        <div class="kpi-text">
+          <div class="kpi-value">{{ s.totalCustomers }}</div>
+          <div class="kpi-label">Clientes</div>
+        </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="kpi-card">
+    <mat-card class="kpi-card card-elevated">
       <mat-card-content>
         <div class="kpi-icon products"><mat-icon>inventory_2</mat-icon></div>
-        <div class="kpi-value">{{ s.totalProducts }}</div>
-        <div class="kpi-label">Produtos</div>
+        <div class="kpi-text">
+          <div class="kpi-value">{{ s.totalProducts }}</div>
+          <div class="kpi-label">Produtos</div>
+        </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="kpi-card">
+    <mat-card class="kpi-card card-elevated">
       <mat-card-content>
         <div class="kpi-icon stock"><mat-icon>warehouse</mat-icon></div>
-        <div class="kpi-value">{{ s.totalStockEntries }}</div>
-        <div class="kpi-label">Entradas de Estoque</div>
+        <div class="kpi-text">
+          <div class="kpi-value">{{ s.totalStockEntries }}</div>
+          <div class="kpi-label">Entradas de Estoque</div>
+        </div>
       </mat-card-content>
     </mat-card>
   </div>
@@ -45,7 +53,7 @@
   <div class="charts-grid">
 
     <!-- Revenue Chart -->
-    <mat-card class="chart-card">
+    <mat-card class="chart-card card-elevated">
       <mat-card-header>
         <mat-card-title>Receita por Pedido (últimos 12)</mat-card-title>
       </mat-card-header>
@@ -61,7 +69,7 @@
     </mat-card>
 
     <!-- Orders by Status -->
-    <mat-card class="chart-card">
+    <mat-card class="chart-card card-elevated">
       <mat-card-header>
         <mat-card-title>Pedidos por Status</mat-card-title>
       </mat-card-header>
@@ -78,7 +86,7 @@
   </div>
 
   <!-- Recent Orders Table -->
-  <mat-card class="recent-orders-card">
+  <mat-card class="recent-orders-card card-elevated">
     <mat-card-header>
       <mat-card-title>Pedidos Recentes</mat-card-title>
     </mat-card-header>
