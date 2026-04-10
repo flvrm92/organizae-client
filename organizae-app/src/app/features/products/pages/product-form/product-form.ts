@@ -16,6 +16,8 @@ import { PageHeader } from '../../../../components/page-header/page-header';
 import { IStatus } from '../../../../../types/IStatus';
 import { IUnitOfMeasure } from '../../../../../types/IUnitOfMeasure';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipsModule, MatChipInputEvent } from '@angular/material/chips';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { AsyncPipe } from '@angular/common';
 import { Observable } from 'rxjs';
 import { startWith, map, takeUntil } from 'rxjs/operators';
@@ -25,7 +27,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-product-form',
-  imports: [ReactiveFormsModule, RouterLink, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatSelectModule, MatAutocompleteModule, AsyncPipe, PageHeader],
+  imports: [ReactiveFormsModule, RouterLink, MatCardModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, MatSelectModule, MatAutocompleteModule, MatChipsModule, AsyncPipe, PageHeader],
   templateUrl: './product-form.html',
   styleUrl: './product-form.css'
 })
@@ -52,6 +54,8 @@ export class ProductForm implements OnInit {
   allCategories = signal<ICategory[]>([]);
   rootCategories = signal<ICategory[]>([]);
   subCategories = signal<ICategory[]>([]);
+  tags = signal<string[]>([]);
+  readonly separatorKeyCodes = [ENTER, COMMA] as const;
 
   categoryControl = new FormControl('');
   subCategoryControl = new FormControl('');
@@ -96,6 +100,7 @@ export class ProductForm implements OnInit {
         if (p.subCategoryId) {
           this.subCategoryControl.setValue(p.subCategoryName || '');
         }
+        this.tags.set(p.tags ?? []);
         this.loading.set(false);
       },
       error: () => { this.loading.set(false); this.snackBar.open('Erro ao carregar produto', 'Fechar', { duration: 3000 }); this.router.navigate(['/produtos']); }
@@ -151,10 +156,22 @@ export class ProductForm implements OnInit {
     this.form.patchValue({ subCategoryId: null });
   }
 
+  addTag(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+    if (value && !this.tags().includes(value)) {
+      this.tags.update(tags => [...tags, value]);
+    }
+    event.chipInput!.clear();
+  }
+
+  removeTag(tag: string): void {
+    this.tags.update(tags => tags.filter(t => t !== tag));
+  }
+
   onSubmit(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving.set(true);
-    const payload = this.form.value;
+    const payload = { ...this.form.value, tags: this.tags() };
     const obs = this.isEditMode() ? this.productSvc.update(this.productId()!, payload) : this.productSvc.create(payload);
     obs.subscribe({
       next: () => { this.saving.set(false); this.snackBar.open(this.isEditMode() ? 'Produto atualizado!' : 'Produto criado!', 'Fechar', { duration: 3000 }); this.router.navigate(['/produtos']); },

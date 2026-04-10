@@ -62,13 +62,15 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Categoria</mat-label>
-            <input matInput [formControl]="categoryControl" [matAutocomplete]="autoCat" placeholder="Pesquise uma categoria..." />
+            <input matInput [formControl]="categoryControl" [matAutocomplete]="autoCat"
+              placeholder="Pesquise uma categoria..." />
             @if (form.get('categoryId')?.value) {
             <button matSuffix mat-icon-button type="button" (click)="clearCategory()">
               <mat-icon>close</mat-icon>
             </button>
             }
-            <mat-autocomplete #autoCat="matAutocomplete" [displayWith]="displayCategory" (optionSelected)="onCategorySelected($event.option.value)">
+            <mat-autocomplete #autoCat="matAutocomplete" [displayWith]="displayCategory"
+              (optionSelected)="onCategorySelected($event.option.value)">
               @for (cat of filteredCategories$ | async; track cat.id) {
               <mat-option [value]="cat">{{ cat.name }}</mat-option>
               }
@@ -76,17 +78,32 @@
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Subcategoria</mat-label>
-            <input matInput [formControl]="subCategoryControl" [matAutocomplete]="autoSubCat" placeholder="Pesquise uma subcategoria..." [disabled]="!form.get('categoryId')?.value" />
+            <input matInput [formControl]="subCategoryControl" [matAutocomplete]="autoSubCat"
+              placeholder="Pesquise uma subcategoria..." [disabled]="!form.get('categoryId')?.value" />
             @if (form.get('subCategoryId')?.value) {
             <button matSuffix mat-icon-button type="button" (click)="clearSubCategory()">
               <mat-icon>close</mat-icon>
             </button>
             }
-            <mat-autocomplete #autoSubCat="matAutocomplete" [displayWith]="displayCategory" (optionSelected)="onSubCategorySelected($event.option.value)">
+            <mat-autocomplete #autoSubCat="matAutocomplete" [displayWith]="displayCategory"
+              (optionSelected)="onSubCategorySelected($event.option.value)">
               @for (cat of filteredSubCategories$ | async; track cat.id) {
               <mat-option [value]="cat">{{ cat.name }}</mat-option>
               }
             </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="field-full">
+            <mat-label>Tags</mat-label>
+            <mat-chip-grid #chipGrid>
+              @for (tag of tags(); track tag) {
+              <mat-chip-row (removed)="removeTag(tag)">
+                {{ tag }}
+                <button matChipRemove><mat-icon>cancel</mat-icon></button>
+              </mat-chip-row>
+              }
+            </mat-chip-grid>
+            <input matInput [matChipInputFor]="chipGrid" [matChipInputSeparatorKeyCodes]="separatorKeyCodes"
+              placeholder="Digite uma tag e pressione Enter..." (matChipInputTokenEnd)="addTag($event)" />
           </mat-form-field>
         </div>
         <div class="form-actions">

@@ -16,4 +16,5 @@ export interface IProduct {
   categoryName: string | null;
   subCategoryId: string | null;
   subCategoryName: string | null;
+  tags: string[];
 }
