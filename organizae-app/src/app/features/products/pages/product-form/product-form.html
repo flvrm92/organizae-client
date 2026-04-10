@@ -60,6 +60,34 @@
             <mat-label>Cor</mat-label>
             <input matInput formControlName="color" placeholder="Ex: Azul, Vermelho..." />
           </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Categoria</mat-label>
+            <input matInput [formControl]="categoryControl" [matAutocomplete]="autoCat" placeholder="Pesquise uma categoria..." />
+            @if (form.get('categoryId')?.value) {
+            <button matSuffix mat-icon-button type="button" (click)="clearCategory()">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+            <mat-autocomplete #autoCat="matAutocomplete" [displayWith]="displayCategory" (optionSelected)="onCategorySelected($event.option.value)">
+              @for (cat of filteredCategories$ | async; track cat.id) {
+              <mat-option [value]="cat">{{ cat.name }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Subcategoria</mat-label>
+            <input matInput [formControl]="subCategoryControl" [matAutocomplete]="autoSubCat" placeholder="Pesquise uma subcategoria..." [disabled]="!form.get('categoryId')?.value" />
+            @if (form.get('subCategoryId')?.value) {
+            <button matSuffix mat-icon-button type="button" (click)="clearSubCategory()">
+              <mat-icon>close</mat-icon>
+            </button>
+            }
+            <mat-autocomplete #autoSubCat="matAutocomplete" [displayWith]="displayCategory" (optionSelected)="onSubCategorySelected($event.option.value)">
+              @for (cat of filteredSubCategories$ | async; track cat.id) {
+              <mat-option [value]="cat">{{ cat.name }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
         <div class="form-actions">
           <button mat-button type="button" routerLink="/produtos">Cancelar</button>

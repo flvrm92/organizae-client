@@ -36,7 +36,7 @@ export class ProductList implements OnInit {
   searchTerm = '';
   pageSize = 20;
   pageIndex = 0;
-  displayedColumns = ['code', 'name', 'price', 'unitOfMeasure', 'size', 'color', 'status', 'actions'];
+  displayedColumns = ['code', 'name', 'category', 'price', 'unitOfMeasure', 'size', 'color', 'status', 'actions'];
 
   ngOnInit(): void { this.loadProducts(); }
 
@@ -50,7 +50,7 @@ export class ProductList implements OnInit {
 
   applyFilter(): void {
     const term = this.searchTerm.toLowerCase().trim();
-    const filtered = term ? this.products().filter(p => p.name?.toLowerCase().includes(term) || p.code?.toLowerCase().includes(term)) : this.products();
+    const filtered = term ? this.products().filter(p => p.name?.toLowerCase().includes(term) || p.code?.toLowerCase().includes(term) || p.categoryName?.toLowerCase().includes(term)) : this.products();
     this.filteredProducts.set(filtered);
     this.pageIndex = 0;
     this.updatePage();

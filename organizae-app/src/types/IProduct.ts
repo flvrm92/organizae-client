@@ -12,4 +12,8 @@ export interface IProduct {
   unitOfMeasureAbbreviation: string | null;
   size: string | null;
   color: string | null;
+  categoryId: string | null;
+  categoryName: string | null;
+  subCategoryId: string | null;
+  subCategoryName: string | null;
 }

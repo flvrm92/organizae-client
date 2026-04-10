@@ -33,14 +33,3 @@
   height: 3rem;
   opacity: 0.35;
 }
-
-.id-cell {
-  font-family: 'Courier New', monospace;
-  font-size: 0.8125rem;
-  color: var(--app-text-secondary);
-}
-
-.subcategory-text {
-  color: var(--app-text-secondary);
-  font-size: 0.875rem;
-}
