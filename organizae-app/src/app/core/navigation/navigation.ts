@@ -53,6 +53,7 @@ export class Navigation {
     { label: 'Clientes', icon: 'people', route: '/clientes' },
     { label: 'Fornecedores', icon: 'local_shipping', route: '/fornecedores' },
     { label: 'Produtos', icon: 'inventory_2', route: '/produtos' },
+    { label: 'Categorias', icon: 'category', route: '/categorias' },
   ];
 
   readonly operacaoItems: NavItem[] = [
