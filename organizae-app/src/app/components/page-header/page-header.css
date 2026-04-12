@@ -2,9 +2,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   flex-wrap: wrap;
   gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--app-border);
 }
 
 .header-left {
@@ -15,10 +17,11 @@
 
 .page-title {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.625rem;
   font-weight: 600;
   line-height: 1.2;
-  color: var(--app-text, inherit);
+  color: var(--app-text);
+  letter-spacing: -0.02em;
 }
 
 .page-subtitle {
@@ -31,4 +34,18 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.back-btn:hover {
+  background: var(--app-primary-dim);
+  color: var(--app-primary);
+}
+
+.header-accent-bar {
+  height: 3px;
+  width: 3rem;
+  background: linear-gradient(90deg, var(--app-primary), var(--app-accent));
+  border-radius: 2px;
+  margin-top: 0.5rem;
+  flex-basis: 100%;
 }

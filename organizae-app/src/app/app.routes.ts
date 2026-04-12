@@ -62,6 +62,21 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'categorias',
+    loadComponent: () => import('./features/categories/pages/category-list/category-list').then(m => m.CategoryList),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'categorias/nova',
+    loadComponent: () => import('./features/categories/pages/category-form/category-form').then(m => m.CategoryForm),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'categorias/:id',
+    loadComponent: () => import('./features/categories/pages/category-form/category-form').then(m => m.CategoryForm),
+    canActivate: [authGuard]
+  },
+  {
     path: 'pedidos',
     loadComponent: () => import('./features/orders/pages/order-list/order-list').then(m => m.OrderList),
     canActivate: [authGuard]
@@ -94,6 +109,11 @@ export const routes: Routes = [
   {
     path: 'estoque/movimentacoes',
     loadComponent: () => import('./features/stock/pages/stock-movement/stock-movement').then(m => m.StockMovement),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'configuracoes',
+    loadComponent: () => import('./features/settings/pages/settings/settings').then(m => m.Settings),
     canActivate: [authGuard]
   },
   {

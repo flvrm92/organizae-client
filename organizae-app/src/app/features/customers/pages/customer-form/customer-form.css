@@ -1,16 +1,29 @@
 .form-section-title {
-  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--app-text-secondary, #666);
-  margin-bottom: 1rem;
+  letter-spacing: 0.06em;
+  color: var(--app-primary);
+  border-left: 3px solid var(--app-primary);
+  padding-left: 0.625rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-section-title mat-icon {
+  font-size: 1rem;
+  width: 1rem;
+  height: 1rem;
+  color: var(--app-primary);
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .field-full {
@@ -23,11 +36,20 @@
 
 .form-actions {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 0.5rem;
   margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--app-border, #e0e0e0);
+  padding-top: 1.25rem;
+  border-top: 2px solid var(--app-primary-dim);
+}
+
+.form-actions button[color="primary"] {
+  min-width: 140px;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .loading-center {

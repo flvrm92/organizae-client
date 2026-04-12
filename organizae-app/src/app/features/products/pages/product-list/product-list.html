@@ -13,7 +13,7 @@
     </mat-form-field>
   </div>
 
-  <div class="table-container">
+  <div class="table-container card-elevated">
     <table mat-table [dataSource]="pagedProducts()" class="full-width-table">
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef>Código</th>
@@ -22,6 +22,15 @@
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Nome</th>
         <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+      </ng-container>
+      <ng-container matColumnDef="category">
+        <th mat-header-cell *matHeaderCellDef>Categoria</th>
+        <td mat-cell *matCellDef="let row">
+          {{ row.categoryName ?? '—' }}
+          @if (row.subCategoryName) {
+            <span class="subcategory-text"> / {{ row.subCategoryName }}</span>
+          }
+        </td>
       </ng-container>
       <ng-container matColumnDef="price">
         <th mat-header-cell *matHeaderCellDef>Preço</th>
@@ -38,6 +47,20 @@
       <ng-container matColumnDef="color">
         <th mat-header-cell *matHeaderCellDef>Cor</th>
         <td mat-cell *matCellDef="let row">{{ row.color ?? '—' }}</td>
+      </ng-container>
+      <ng-container matColumnDef="tags">
+        <th mat-header-cell *matHeaderCellDef>Tags</th>
+        <td mat-cell *matCellDef="let row">
+          @if (row.tags?.length) {
+          <mat-chip-set>
+            @for (tag of row.tags; track tag) {
+            <mat-chip>{{ tag }}</mat-chip>
+            }
+          </mat-chip-set>
+          } @else {
+            —
+          }
+        </td>
       </ng-container>
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef>Status</th>
@@ -58,7 +81,12 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">Nenhum produto encontrado</td>
+        <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Nenhum produto encontrado</span>
+          </div>
+        </td>
       </tr>
     </table>
     <mat-paginator [length]="filteredProducts().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]"

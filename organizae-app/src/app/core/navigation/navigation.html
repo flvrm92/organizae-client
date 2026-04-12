@@ -4,51 +4,69 @@
   <mat-sidenav #sidenav [mode]="isHandset ? 'over' : 'side'" [opened]="!isHandset" class="sidenav">
 
     <div class="sidenav-header">
-      <span class="app-logo">Organizae</span>
-    </div>
+      @if (orgStore.displayLogoUrl()) {
+      <img class="logo-img" [src]="orgStore.displayLogoUrl()" alt="Logo" />
+      } @else {
+      <mat-icon class="logo-icon">store</mat-icon>
+      }
 
-    <mat-divider></mat-divider>
+    </div>
 
     <mat-nav-list>
       <div class="nav-section-label">Visão Geral</div>
-      @for (item of overviewItems; track item.route) {
-      <a mat-list-item class="mb-1" [routerLink]="item.route" routerLinkActive="active-link"
-        (click)="isHandset && sidenav.close()">
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span matListItemTitle>{{ item.label }}</span>
-      </a>
-      }
+      <div class="nav-group">
+        @for (item of overviewItems; track item.route) {
+        <a mat-list-item class="nav-item mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+          (click)="isHandset && sidenav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+        }
+      </div>
 
-      <mat-divider></mat-divider>
       <div class="nav-section-label">Cadastros</div>
-      @for (item of cadastroItems; track item.route) {
-      <a mat-list-item class="mb-1" [routerLink]="item.route" routerLinkActive="active-link"
-        (click)="isHandset && sidenav.close()">
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span matListItemTitle>{{ item.label }}</span>
-      </a>
-      }
+      <div class="nav-group">
+        @for (item of cadastroItems; track item.route) {
+        <a mat-list-item class="nav-item mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+          (click)="isHandset && sidenav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+        }
+      </div>
 
-      <mat-divider></mat-divider>
       <div class="nav-section-label">Operações</div>
-      @for (item of operacaoItems; track item.route) {
-      <a mat-list-item class="mb-1" [routerLink]="item.route" routerLinkActive="active-link"
-        (click)="isHandset && sidenav.close()">
-        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
-        <span matListItemTitle>{{ item.label }}</span>
-      </a>
-      }
+      <div class="nav-group">
+        @for (item of operacaoItems; track item.route) {
+        <a mat-list-item class="nav-item mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+          (click)="isHandset && sidenav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+        }
+      </div>
+
+      <div class="nav-section-label">Configurações</div>
+      <div class="nav-group">
+        @for (item of configItems; track item.route) {
+        <a mat-list-item class="nav-item mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+          (click)="isHandset && sidenav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+        }
+      </div>
     </mat-nav-list>
   </mat-sidenav>
 
   <mat-sidenav-content class="sidenav-content">
-    <mat-toolbar color="primary" class="toolbar">
+    <mat-toolbar class="toolbar">
       @if (isHandset) {
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
       }
-      <span>Organizae</span>
+      <span class="toolbar-title">{{ orgStore.displayTitle() }}</span>
       <span class="spacer"></span>
       <app-theme-toggle></app-theme-toggle>
       <button mat-icon-button [matMenuTriggerFor]="userMenu">

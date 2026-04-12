@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ThemeToggle } from '../../components/theme-toggle/theme-toggle';
 import { AuthService } from '../../auth/services/auth.service';
 import { ProgressBar } from '../progress-bar/progress-bar';
+import { OrganizationStore } from '../services/organization.store';
 
 interface NavItem {
   label: string;
@@ -42,6 +43,7 @@ export class Navigation {
 
   private readonly auth = inject(AuthService);
   private readonly breakpointObserver = inject(BreakpointObserver);
+  readonly orgStore = inject(OrganizationStore);
 
   isHandset = false;
 
@@ -53,12 +55,17 @@ export class Navigation {
     { label: 'Clientes', icon: 'people', route: '/clientes' },
     { label: 'Fornecedores', icon: 'local_shipping', route: '/fornecedores' },
     { label: 'Produtos', icon: 'inventory_2', route: '/produtos' },
+    { label: 'Categorias', icon: 'category', route: '/categorias' },
   ];
 
   readonly operacaoItems: NavItem[] = [
     { label: 'Pedidos', icon: 'receipt_long', route: '/pedidos' },
     { label: 'Entradas de Estoque', icon: 'add_box', route: '/estoque/entradas' },
     { label: 'Movimentações', icon: 'swap_horiz', route: '/estoque/movimentacoes' },
+  ];
+
+  readonly configItems: NavItem[] = [
+    { label: 'Configurações', icon: 'settings', route: '/configuracoes' },
   ];
 
   constructor() {
@@ -72,6 +79,7 @@ export class Navigation {
         }
       }
     });
+    this.orgStore.loadConfig();
   }
 
   logout(): void {

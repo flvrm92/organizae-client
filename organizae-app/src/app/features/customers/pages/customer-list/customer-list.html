@@ -8,12 +8,13 @@
   <div class="search-row">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar clientes</mat-label>
-      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="Nome, e-mail ou CPF/CNPJ..." />
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()"
+        placeholder="Nome, e-mail ou CPF/CNPJ..." />
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
   </div>
 
-  <div class="table-container">
+  <div class="table-container card-elevated">
     <table mat-table [dataSource]="pagedCustomers()" class="full-width-table">
 
       <ng-container matColumnDef="fullName">
@@ -54,20 +55,18 @@
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
           @if (loading()) {
-            Carregando...
+          Carregando...
           } @else {
-            Nenhum cliente encontrado
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <span>Nenhum cliente encontrado</span>
+          </div>
           }
         </td>
       </tr>
     </table>
 
-    <mat-paginator
-      [length]="filteredCustomers().length"
-      [pageSize]="pageSize"
-      [pageSizeOptions]="[10, 20, 50, 100]"
-      (page)="onPage($event)"
-      showFirstLastButtons
-    />
+    <mat-paginator [length]="filteredCustomers().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+      (page)="onPage($event)" showFirstLastButtons />
   </div>
 </div>
