@@ -1,0 +1,65 @@
+<div class="settings-container">
+  <h1 class="page-title">Configurações da Loja</h1>
+
+  <div class="settings-card">
+    <h2 class="section-title">Informações Gerais</h2>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Título da Loja</mat-label>
+      <input matInput [ngModel]="title()" (ngModelChange)="title.set($event)" maxlength="100"
+        placeholder="Nome exibido na navegação" />
+      <mat-hint>Este nome será exibido na barra de navegação</mat-hint>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-flat-button color="primary" (click)="saveTitle()" [disabled]="savingTitle() || !title().trim()">
+        @if (savingTitle()) {
+        Salvando...
+        } @else {
+        Salvar Título
+        }
+      </button>
+    </div>
+  </div>
+
+  <div class="settings-card">
+    <h2 class="section-title">Logo da Loja</h2>
+
+    <div class="logo-section">
+      <div class="logo-preview">
+        @if (previewUrl()) {
+        <img [src]="previewUrl()" alt="Preview do logo" class="logo-image" />
+        } @else if (orgStore.displayLogoUrl()) {
+        <img [src]="orgStore.displayLogoUrl()" alt="Logo atual" class="logo-image" />
+        } @else {
+        <div class="logo-placeholder">
+          <mat-icon>store</mat-icon>
+          <span>Nenhum logo definido</span>
+        </div>
+        }
+      </div>
+
+      <div class="logo-controls">
+        <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onFileSelected($event)" #fileInput
+          hidden />
+        <button mat-stroked-button (click)="fileInput.click()">
+          <mat-icon>upload</mat-icon>
+          Selecionar Imagem
+        </button>
+
+        @if (selectedFile()) {
+        <span class="file-name">{{ selectedFile()!.name }}</span>
+        <button mat-flat-button color="primary" (click)="uploadLogo()" [disabled]="uploadingLogo()">
+          @if (uploadingLogo()) {
+          Enviando...
+          } @else {
+          Enviar Logo
+          }
+        </button>
+        }
+
+        <p class="hint">PNG, JPEG ou WebP. Máximo 2MB.</p>
+      </div>
+    </div>
+  </div>
+</div>
