@@ -14,6 +14,7 @@
   padding: 16px;
   height: 72px;
   border-bottom: 2px solid var(--app-primary-dim);
+  justify-content: center;
 }
 
 .app-logo {
@@ -31,6 +32,14 @@
   font-size: 1.5rem;
   width: 1.5rem;
   height: 1.5rem;
+}
+
+.logo-img {
+  width: 66px;
+  height: 66px;
+  object-fit: contain;
+  border-radius: 6px;
+  margin-right: 0.5rem;
 }
 
 .nav-group {

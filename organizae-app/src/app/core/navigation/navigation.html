@@ -4,8 +4,12 @@
   <mat-sidenav #sidenav [mode]="isHandset ? 'over' : 'side'" [opened]="!isHandset" class="sidenav">
 
     <div class="sidenav-header">
+      @if (orgStore.displayLogoUrl()) {
+      <img class="logo-img" [src]="orgStore.displayLogoUrl()" alt="Logo" />
+      } @else {
       <mat-icon class="logo-icon">store</mat-icon>
-      <span class="app-logo">Organizae</span>
+      }
+
     </div>
 
     <mat-nav-list>
@@ -41,6 +45,17 @@
         </a>
         }
       </div>
+
+      <div class="nav-section-label">Configurações</div>
+      <div class="nav-group">
+        @for (item of configItems; track item.route) {
+        <a mat-list-item class="nav-item mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+          (click)="isHandset && sidenav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+        }
+      </div>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -51,7 +66,7 @@
         <mat-icon>menu</mat-icon>
       </button>
       }
-      <span class="toolbar-title">Organizae</span>
+      <span class="toolbar-title">{{ orgStore.displayTitle() }}</span>
       <span class="spacer"></span>
       <app-theme-toggle></app-theme-toggle>
       <button mat-icon-button [matMenuTriggerFor]="userMenu">

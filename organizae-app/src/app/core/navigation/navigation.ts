@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { ThemeToggle } from '../../components/theme-toggle/theme-toggle';
 import { AuthService } from '../../auth/services/auth.service';
 import { ProgressBar } from '../progress-bar/progress-bar';
+import { OrganizationStore } from '../services/organization.store';
 
 interface NavItem {
   label: string;
@@ -42,6 +43,7 @@ export class Navigation {
 
   private readonly auth = inject(AuthService);
   private readonly breakpointObserver = inject(BreakpointObserver);
+  readonly orgStore = inject(OrganizationStore);
 
   isHandset = false;
 
@@ -62,6 +64,10 @@ export class Navigation {
     { label: 'Movimentações', icon: 'swap_horiz', route: '/estoque/movimentacoes' },
   ];
 
+  readonly configItems: NavItem[] = [
+    { label: 'Configurações', icon: 'settings', route: '/configuracoes' },
+  ];
+
   constructor() {
     this.breakpointObserver.observe([Breakpoints.Handset]).subscribe(result => {
       this.isHandset = result.matches;
@@ -73,6 +79,7 @@ export class Navigation {
         }
       }
     });
+    this.orgStore.loadConfig();
   }
 
   logout(): void {
