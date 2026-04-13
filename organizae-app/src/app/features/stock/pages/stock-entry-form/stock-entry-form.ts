@@ -38,7 +38,8 @@ export class StockEntryForm implements OnInit {
 
   supplierSearchControl = new FormControl('');
   supplierSearchResults = signal<ISupplierSearch[]>([]);
-  products = signal<IProduct[]>([]);
+  productSearchControls: FormControl[] = [];
+  productSearchResults = signal<IProduct[][]>([]);
   saving = signal(false);
   movementColumns = ['product', 'quantity', 'costPrice', 'remove'];
   itemsData = signal<{ productId: string; quantity: number; costPrice: number }[]>([]);
@@ -51,7 +52,6 @@ export class StockEntryForm implements OnInit {
   get movements(): FormArray { return this.form.get('movements') as FormArray; }
 
   ngOnInit(): void {
-    this.productSvc.getAll().subscribe({ next: (p) => this.products.set(p) });
     this.addMovement();
 
     this.supplierSearchControl.valueChanges.pipe(
@@ -80,12 +80,68 @@ export class StockEntryForm implements OnInit {
       quantity: [1, [Validators.required, Validators.min(1)]],
       costPrice: [0, [Validators.required, Validators.min(0)]]
     }));
+    const index = this.movements.length - 1;
+    this.productSearchControls.push(new FormControl(''));
+    const results = [...this.productSearchResults()];
+    results.push([]);
+    this.productSearchResults.set(results);
+    this.setupProductSearch(index);
     this.itemsData.set([...this.movements.controls.map(x => x.value)]);
   }
 
   removeMovement(index: number): void {
-    if (this.movements.length > 1)
+    if (this.movements.length > 1) {
       this.movements.removeAt(index);
+      this.productSearchControls.splice(index, 1);
+      const results = [...this.productSearchResults()];
+      results.splice(index, 1);
+      this.productSearchResults.set(results);
+      this.itemsData.set([...this.movements.controls.map(x => x.value)]);
+    }
+  }
+
+  private setupProductSearch(index: number): void {
+    const control = this.productSearchControls[index];
+
+    control.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(value => {
+      if (typeof value === 'string') {
+        this.movements.at(index).patchValue({ productId: '' });
+        if (value.length < 3) {
+          const results = [...this.productSearchResults()];
+          results[index] = [];
+          this.productSearchResults.set(results);
+        }
+      }
+    });
+
+    control.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      debounceTime(300),
+      filter(v => typeof v === 'string' && v.length >= 3),
+      switchMap(v => this.productSvc.search(v as string))
+    ).subscribe({
+      next: results => {
+        const all = [...this.productSearchResults()];
+        all[index] = results;
+        this.productSearchResults.set(all);
+      },
+      error: () => {
+        const all = [...this.productSearchResults()];
+        all[index] = [];
+        this.productSearchResults.set(all);
+      }
+    });
+  }
+
+  displayProductFn(product: IProduct | null): string {
+    return product ? `${product.code} — ${product.name}` : '';
+  }
+
+  onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
+    const product = event.option.value as IProduct;
+    this.movements.at(index).patchValue({ productId: product.id });
   }
 
   displaySupplierFn(supplier: ISupplierSearch | null): string {
