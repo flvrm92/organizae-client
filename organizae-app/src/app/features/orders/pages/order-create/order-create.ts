@@ -42,7 +42,9 @@ export class OrderCreate implements OnInit {
 
   customerSearchControl = new FormControl('');
   customerSearchResults = signal<ICustomerSearch[]>([]);
-  products = signal<IProduct[]>([]);
+  productSearchControls: FormControl[] = [];
+  productSearchResults = signal<IProduct[][]>([]);
+  selectedProducts = signal<Map<string, IProduct>>(new Map());
   saving = signal(false);
   itemsData = signal<{ productId: string; quantity: number; discount: number }[]>([]);
   itemColumns = ['product', 'quantity', 'price', 'discount', 'subtotal', 'remove'];
@@ -55,7 +57,6 @@ export class OrderCreate implements OnInit {
   get items(): FormArray { return this.form.get('items') as FormArray; }
 
   ngOnInit(): void {
-    this.productSvc.getAll().subscribe({ next: (p) => this.products.set(p) });
     this.addItem();
 
     this.customerSearchControl.valueChanges.pipe(
@@ -84,18 +85,63 @@ export class OrderCreate implements OnInit {
       quantity: [1, [Validators.required, Validators.min(1)]],
       discount: [0, [Validators.min(0)]]
     }));
+    const index = this.productSearchControls.length;
+    this.productSearchControls.push(new FormControl(''));
+    const results = [...this.productSearchResults()];
+    results.push([]);
+    this.productSearchResults.set(results);
+    this.setupProductSearch(index);
     this.itemsData.set([...this.items.controls.map(c => c.value)]);
+  }
+
+  private setupProductSearch(index: number): void {
+    const control = this.productSearchControls[index];
+
+    control.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(value => {
+      if (typeof value === 'string') {
+        this.items.at(index).patchValue({ productId: '' });
+        if (value.length < 3) {
+          const results = [...this.productSearchResults()];
+          results[index] = [];
+          this.productSearchResults.set(results);
+        }
+      }
+    });
+
+    control.valueChanges.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      debounceTime(300),
+      filter(v => typeof v === 'string' && v.length >= 3),
+      switchMap(v => this.productSvc.search(v as string))
+    ).subscribe({
+      next: results => {
+        const all = [...this.productSearchResults()];
+        all[index] = results;
+        this.productSearchResults.set(all);
+      },
+      error: () => {
+        const all = [...this.productSearchResults()];
+        all[index] = [];
+        this.productSearchResults.set(all);
+      }
+    });
   }
 
   removeItem(index: number): void {
     if (this.items.length > 1) {
       this.items.removeAt(index);
+      this.productSearchControls.splice(index, 1);
+      const results = [...this.productSearchResults()];
+      results.splice(index, 1);
+      this.productSearchResults.set(results);
       this.itemsData.set([...this.items.controls.map(c => c.value)]);
     }
   }
 
   getProductPrice(productId: string): number {
-    return this.products().find(p => p.id === productId)?.price ?? 0;
+    return this.selectedProducts().get(productId)?.price ?? 0;
   }
 
   getItemSubtotal(index: number): number {
@@ -110,6 +156,18 @@ export class OrderCreate implements OnInit {
 
   displayCustomerFn(customer: ICustomerSearch | null): string {
     return customer ? `${customer.firstName} ${customer.lastName}` : '';
+  }
+
+  displayProductFn(product: IProduct | null): string {
+    return product ? `${product.code} — ${product.name}` : '';
+  }
+
+  onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
+    const product = event.option.value as IProduct;
+    this.items.at(index).patchValue({ productId: product.id });
+    const map = new Map(this.selectedProducts());
+    map.set(product.id, product);
+    this.selectedProducts.set(map);
   }
 
   onCustomerSelected(event: MatAutocompleteSelectedEvent): void {
@@ -132,7 +190,7 @@ export class OrderCreate implements OnInit {
       subTotal,
       orderItems: (items as any[]).map(item => ({
         productId: item.productId,
-        productNameSnapshot: this.products().find(p => p.id === item.productId)?.name ?? '',
+        productNameSnapshot: this.selectedProducts().get(item.productId)?.name ?? '',
         unitPrice: this.getProductPrice(item.productId),
         quantity: item.quantity,
         discount: item.discount ?? 0,
