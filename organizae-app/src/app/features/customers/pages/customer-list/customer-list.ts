@@ -38,7 +38,7 @@ export class CustomerList implements OnInit {
   searchTerm = '';
   pageSize = 20;
   pageIndex = 0;
-  displayedColumns = ['fullName', 'email', 'phone', 'document', 'actions'];
+  displayedColumns = ['fullName', 'cellPhone', 'email', 'document', 'actions'];
 
   ngOnInit(): void {
     this.loadCustomers();

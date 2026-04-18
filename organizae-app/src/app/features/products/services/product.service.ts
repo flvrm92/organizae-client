@@ -30,7 +30,7 @@ export class ProductService {
     return this.api.delete<void>(`/api/Product/${id}`);
   }
 
-  search(q: string): Observable<IProduct[]> {
-    return this.api.get<IProduct[]>('/api/Product/search', { q });
+  search(q: string, inStockOnly = false): Observable<IProduct[]> {
+    return this.api.get<IProduct[]>('/api/Product/search', { q, inStockOnly: String(inStockOnly) });
   }
 }

@@ -21,6 +21,7 @@ import { CustomerService } from '../../../customers/services/customer.service';
 import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { ReceivePaymentDialog, ReceivePaymentDialogResult } from '../../components/receive-payment-dialog/receive-payment-dialog';
+import { getHighlightSegments, HighlightSegment } from '../../../../shared/utils/highlight-match';
 import { ICustomerSearch } from '../../../../../types/ICustomerSearch';
 import { IProduct } from '../../../../../types/IProduct';
 
@@ -82,6 +83,7 @@ export class OrderCreate implements OnInit {
   addItem(): void {
     this.items.push(this.fb.group({
       productId: ['', Validators.required],
+      unitPrice: [0, [Validators.required, Validators.min(0.01)]],
       quantity: [1, [Validators.required, Validators.min(1)]],
       discount: [0, [Validators.min(0)]]
     }));
@@ -114,7 +116,7 @@ export class OrderCreate implements OnInit {
       takeUntilDestroyed(this.destroyRef),
       debounceTime(300),
       filter(v => typeof v === 'string' && v.length >= 3),
-      switchMap(v => this.productSvc.search(v as string))
+      switchMap(v => this.productSvc.search(v as string, true))
     ).subscribe({
       next: results => {
         const all = [...this.productSearchResults()];
@@ -146,8 +148,7 @@ export class OrderCreate implements OnInit {
 
   getItemSubtotal(index: number): number {
     const item = this.items.at(index).value;
-    const price = this.getProductPrice(item.productId);
-    return (price * (item.quantity ?? 0)) - (item.discount ?? 0);
+    return ((item.unitPrice ?? 0) * (item.quantity ?? 0)) - (item.discount ?? 0);
   }
 
   getTotal(): number {
@@ -162,9 +163,13 @@ export class OrderCreate implements OnInit {
     return product ? `${product.code} — ${product.name}` : '';
   }
 
+  highlightProductName(name: string | null | undefined, query: unknown): HighlightSegment[] {
+    return getHighlightSegments(name, query);
+  }
+
   onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
     const product = event.option.value as IProduct;
-    this.items.at(index).patchValue({ productId: product.id });
+    this.items.at(index).patchValue({ productId: product.id, unitPrice: product.price });
     const map = new Map(this.selectedProducts());
     map.set(product.id, product);
     this.selectedProducts.set(map);
@@ -191,10 +196,10 @@ export class OrderCreate implements OnInit {
       orderItems: (items as any[]).map(item => ({
         productId: item.productId,
         productNameSnapshot: this.selectedProducts().get(item.productId)?.name ?? '',
-        unitPrice: this.getProductPrice(item.productId),
+        unitPrice: item.unitPrice,
         quantity: item.quantity,
         discount: item.discount ?? 0,
-        total: this.getProductPrice(item.productId) * (item.quantity ?? 0) - (item.discount ?? 0)
+        total: (item.unitPrice ?? 0) * (item.quantity ?? 0) - (item.discount ?? 0)
       }))
     };
     this.orderSvc.create(payload).subscribe({

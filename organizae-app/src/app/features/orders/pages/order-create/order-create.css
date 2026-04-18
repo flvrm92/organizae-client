@@ -93,6 +93,18 @@
   width: 100px;
 }
 
+.product-search-option {
+  display: flex;
+  align-items: start;
+  gap: 8px;
+}
+
+.product-search-option__stock {
+  font-size: 0.75rem;
+  color: var(--mat-sys-outline);
+  white-space: nowrap;
+}
+
 .total-row {
   display: flex;
   justify-content: flex-end;
