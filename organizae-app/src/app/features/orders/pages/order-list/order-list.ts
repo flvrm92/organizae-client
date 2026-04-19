@@ -18,6 +18,7 @@ import { OrderService } from '../../services/order.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { ReceivePaymentDialog, ReceivePaymentDialogResult } from '../../components/receive-payment-dialog/receive-payment-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { removeAccents } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-order-list',
@@ -73,8 +74,8 @@ export class OrderList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = this.searchTerm.toLowerCase().trim();
-    const filtered = term ? this.orders().filter(o => o.id?.toLowerCase().includes(term) || o.customerId?.toLowerCase().includes(term)) : this.orders();
+    const term = removeAccents(this.searchTerm.toLowerCase().trim());
+    const filtered = term ? this.orders().filter(o => removeAccents(o.id?.toLowerCase() ?? '').includes(term) || removeAccents(o.customerId?.toLowerCase() ?? '').includes(term)) : this.orders();
     this.filteredOrders.set(filtered);
     this.pageIndex = 0;
     this.updatePage();
@@ -91,15 +92,18 @@ export class OrderList implements OnInit {
     const ref = this.dialog.open(ConfirmDialog, {
       data: {
         title: 'Cancelar Pedido',
-        message: `Deseja cancelar o pedido #${order.id.substring(0, 8)}...?`,
-        confirmLabel: 'Cancelar'
+        message: `Deseja cancelar o pedido #${order.code} ?`,
+        confirmLabel: 'Cancelar Pedido'
       },
       width: '400px'
     });
     ref.afterClosed().subscribe(confirmed => {
       if (!confirmed) return;
       this.orderSvc.cancel(order.id).subscribe({
-        next: () => { this.snackBar.open('Pedido cancelado!', 'Fechar', { duration: 3000 }); this.loadOrders(); },
+        next: () => {
+          this.snackBar.open('Pedido cancelado!', 'Fechar', { duration: 3000 });
+          this.loadOrders();
+        },
         error: () => this.snackBar.open('Erro ao cancelar pedido', 'Fechar', { duration: 3000 })
       });
     });

@@ -1,3 +1,5 @@
+import { removeAccents } from './string-utils';
+
 export interface HighlightSegment {
   text: string;
   highlight: boolean;
@@ -13,24 +15,30 @@ export function getHighlightSegments(value: string | null | undefined, query: un
     return [{ text: value, highlight: false }];
   }
 
-  const pattern = new RegExp(`(${terms.map(term => escapeRegExp(term)).join('|')})`, 'gi');
-  const segments: HighlightSegment[] = [];
-  let lastIndex = 0;
+  const normalizedValue = removeAccents(value.toLowerCase());
+  const normalizedTerms = terms.map(t => removeAccents(t.toLowerCase()));
+  const highlights = new Array<boolean>(value.length).fill(false);
 
-  for (const match of value.matchAll(pattern)) {
-    const index = match.index ?? 0;
-    const text = match[0];
-
-    if (index > lastIndex) {
-      segments.push({ text: value.slice(lastIndex, index), highlight: false });
+  for (const term of normalizedTerms) {
+    let pos = 0;
+    while ((pos = normalizedValue.indexOf(term, pos)) !== -1) {
+      for (let i = pos; i < pos + term.length; i++) {
+        highlights[i] = true;
+      }
+      pos += 1;
     }
-
-    segments.push({ text, highlight: true });
-    lastIndex = index + text.length;
   }
 
-  if (lastIndex < value.length) {
-    segments.push({ text: value.slice(lastIndex), highlight: false });
+  const segments: HighlightSegment[] = [];
+  let i = 0;
+  while (i < value.length) {
+    const isHighlight = highlights[i];
+    let j = i + 1;
+    while (j < value.length && highlights[j] === isHighlight) {
+      j++;
+    }
+    segments.push({ text: value.slice(i, j), highlight: isHighlight });
+    i = j;
   }
 
   return segments.length > 0 ? segments : [{ text: value, highlight: false }];
@@ -53,4 +61,4 @@ function getTerms(query: unknown): string[] {
 
 function escapeRegExp(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-} 
+}
