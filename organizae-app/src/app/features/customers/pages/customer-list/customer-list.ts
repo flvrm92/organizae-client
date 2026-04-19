@@ -14,6 +14,7 @@ import { ICustomer } from '../../../../../types/ICustomer';
 import { CustomerService } from '../../services/customer.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { removeAccents } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-customer-list',
@@ -38,7 +39,7 @@ export class CustomerList implements OnInit {
   searchTerm = '';
   pageSize = 20;
   pageIndex = 0;
-  displayedColumns = ['fullName', 'email', 'phone', 'document', 'actions'];
+  displayedColumns = ['fullName', 'cellPhone', 'email', 'document', 'actions'];
 
   ngOnInit(): void {
     this.loadCustomers();
@@ -60,12 +61,12 @@ export class CustomerList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = this.searchTerm.toLowerCase().trim();
+    const term = removeAccents(this.searchTerm.toLowerCase().trim());
     const filtered = term
       ? this.customers().filter(c =>
-        `${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase().includes(term) ||
-        c.email?.toLowerCase().includes(term) ||
-        c.document?.toLowerCase().includes(term))
+        removeAccents(`${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase()).includes(term) ||
+        removeAccents(c.email?.toLowerCase() ?? '').includes(term) ||
+        removeAccents(c.document?.toLowerCase() ?? '').includes(term))
       : this.customers();
     this.filteredCustomers.set(filtered);
     this.pageIndex = 0;

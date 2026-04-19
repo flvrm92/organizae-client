@@ -18,6 +18,7 @@ import { StockService } from '../../services/stock.service';
 import { SupplierService } from '../../../suppliers/services/supplier.service';
 import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { getHighlightSegments, HighlightSegment } from '../../../../shared/utils/highlight-match';
 import { ISupplierSearch } from '../../../../../types/ISupplierSearch';
 import { IProduct } from '../../../../../types/IProduct';
 
@@ -137,6 +138,10 @@ export class StockEntryForm implements OnInit {
 
   displayProductFn(product: IProduct | null): string {
     return product ? `${product.code} — ${product.name}` : '';
+  }
+
+  highlightProductName(name: string | null | undefined, query: unknown): HighlightSegment[] {
+    return getHighlightSegments(name, query);
   }
 
   onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {

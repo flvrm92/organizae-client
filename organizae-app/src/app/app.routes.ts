@@ -87,6 +87,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'pedidos/:id/editar',
+    loadComponent: () => import('./features/orders/pages/order-edit/order-edit').then(m => m.OrderEdit),
+    canActivate: [authGuard]
+  },
+  {
     path: 'pedidos/:id',
     loadComponent: () => import('./features/orders/pages/order-detail/order-detail').then(m => m.OrderDetail),
     canActivate: [authGuard]

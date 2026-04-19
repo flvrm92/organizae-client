@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ENVIRONMENT } from '../../config/environment.token';
 
@@ -9,6 +9,10 @@ export class ApiService {
   protected readonly env = inject(ENVIRONMENT);
 
   get<T>(path: string, params?: Record<string, string>): Observable<T> {
+    return this.http.get<T>(`${this.env.apiUrl}${path}`, { params });
+  }
+
+  getWithParams<T>(path: string, params: HttpParams): Observable<T> {
     return this.http.get<T>(`${this.env.apiUrl}${path}`, { params });
   }
 
