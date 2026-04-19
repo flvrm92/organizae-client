@@ -47,8 +47,10 @@
           <button mat-icon-button color="primary" (click)="receiveOrder(row)"
             matTooltip="Receber pedido"><mat-icon>payments</mat-icon></button>
           }
+          @if (row.statusName !== 'Cancelado') {
           <button mat-icon-button color="warn" (click)="cancelOrder(row)"
             matTooltip="Cancelar Pedido"><mat-icon>cancel</mat-icon></button>
+          }
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
