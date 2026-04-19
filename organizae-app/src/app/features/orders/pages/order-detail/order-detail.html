@@ -6,15 +6,28 @@
   } @else if (order()) {
   <div class="detail-grid">
     <mat-card class="info-card card-elevated">
-      <mat-card-header><mat-card-title>Informações do Pedido</mat-card-title></mat-card-header>
+      <mat-card-header>
+        <mat-card-title>Informações do Pedido</mat-card-title>
+        @if (isEditable()) {
+        <a mat-stroked-button [routerLink]="'/pedidos/' + order()!.id + '/editar'" class="edit-button">
+          <mat-icon>edit</mat-icon> Editar
+        </a>
+        }
+      </mat-card-header>
       <mat-card-content>
-        <div class="info-row"><span class="info-label">Código</span><span class="info-value id-value">{{ order()!.code }}</span></div>
-        <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">{{ order()!.customerName }}</span></div>
-        <div class="info-row"><span class="info-label">Status</span><mat-chip-set><mat-chip [ngClass]="order()!.statusName | statusClass">{{ order()!.statusName }}</mat-chip></mat-chip-set></div>
-        <div class="info-row"><span class="info-label">Total</span><span class="info-value total-value">{{ order()!.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
-        <div class="info-row"><span class="info-label">Criado em</span><span class="info-value">{{ order()!.createdAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
+        <div class="info-row"><span class="info-label">Código</span><span class="info-value id-value">{{ order()!.code
+            }}</span></div>
+        <div class="info-row"><span class="info-label">Cliente</span><span class="info-value">{{ order()!.customerName
+            }}</span></div>
+        <div class="info-row"><span class="info-label">Status</span><mat-chip-set><mat-chip
+              [ngClass]="order()!.statusName | statusClass">{{ order()!.statusName }}</mat-chip></mat-chip-set></div>
+        <div class="info-row"><span class="info-label">Total</span><span class="info-value total-value">{{
+            order()!.subTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
+        <div class="info-row"><span class="info-label">Criado em</span><span class="info-value">{{ order()!.createdAt |
+            date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
         @if (order()!.updatedAt) {
-        <div class="info-row"><span class="info-label">Atualizado em</span><span class="info-value">{{ order()!.updatedAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
+        <div class="info-row"><span class="info-label">Atualizado em</span><span class="info-value">{{
+            order()!.updatedAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span></div>
         }
       </mat-card-content>
     </mat-card>
@@ -49,5 +62,29 @@
       </mat-card-content>
     </mat-card>
   </div>
+
+  @if (history().length > 0) {
+  <mat-card class="history-card card-elevated">
+    <mat-card-header><mat-card-title>Histórico de Alterações</mat-card-title></mat-card-header>
+    <mat-card-content>
+      <div class="history-timeline">
+        @for (entry of history(); track entry.id) {
+        <div class="history-entry">
+          <div class="history-entry__header">
+            <mat-icon class="history-entry__icon">history</mat-icon>
+            <span class="history-entry__type">{{ entry.changeType }}</span>
+            <span class="history-entry__date">{{ entry.changedAt | date:'dd/MM/yyyy HH:mm':'':'pt-BR' }}</span>
+          </div>
+          <div class="history-entry__description">{{ entry.description }}</div>
+          <div class="history-entry__comment">
+            <mat-icon>comment</mat-icon>
+            <span>{{ entry.comment }}</span>
+          </div>
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+  }
   }
 </div>
