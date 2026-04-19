@@ -5,12 +5,46 @@
     </button>
   </app-page-header>
 
-  <div class="search-row">
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Buscar pedidos</mat-label>
-      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="ID ou cliente..." />
-      <mat-icon matPrefix>search</mat-icon>
+  <div class="filter-row">
+    <mat-form-field appearance="outline">
+      <mat-label>Cliente</mat-label>
+      <mat-icon matPrefix>person_search</mat-icon>
+      <input matInput [formControl]="customerSearchControl" [matAutocomplete]="autoCustomer"
+        placeholder="Buscar cliente..." />
+      <mat-autocomplete #autoCustomer="matAutocomplete" [displayWith]="displayCustomer"
+        (optionSelected)="onCustomerSelected($event)">
+        @for (c of customerSearchResults(); track c.id) {
+        <mat-option [value]="c">{{ c.firstName }} {{ c.lastName }} — {{ c.document }}</mat-option>
+        }
+      </mat-autocomplete>
     </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data Inicial</mat-label>
+      <input matInput [matDatepicker]="pickerStart" [formControl]="startDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerStart" />
+      <mat-datepicker #pickerStart />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data Final</mat-label>
+      <input matInput [matDatepicker]="pickerEnd" [formControl]="endDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="pickerEnd" />
+      <mat-datepicker #pickerEnd />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="selectedStatusIds" multiple>
+        @for (s of statuses(); track s.id) {
+        <mat-option [value]="s.id">{{ s.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-button (click)="clearFilters()">
+      <mat-icon>clear</mat-icon> Limpar Filtros
+    </button>
   </div>
 
   <div class="table-container card-elevated">
@@ -47,8 +81,10 @@
           <button mat-icon-button color="primary" (click)="receiveOrder(row)"
             matTooltip="Receber pedido"><mat-icon>payments</mat-icon></button>
           }
+          @if (row.statusName !== 'Cancelado') {
           <button mat-icon-button color="warn" (click)="cancelOrder(row)"
             matTooltip="Cancelar Pedido"><mat-icon>cancel</mat-icon></button>
+          }
         </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

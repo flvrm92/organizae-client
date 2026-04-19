@@ -1,3 +1,16 @@
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.filter-row mat-form-field {
+  flex: 1;
+  min-width: 180px;
+}
+
 .search-row {
   display: flex;
   align-items: center;

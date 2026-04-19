@@ -1,5 +1,9 @@
 <div class="page-container">
-  <app-page-header title="Novo Pedido" subtitle="Crie um novo pedido para um cliente" backLink="/pedidos" />
+  <app-page-header title="Editar Pedido" subtitle="Altere os dados do pedido" [backLink]="'/pedidos/' + orderId" />
+
+  @if (loading()) {
+  <div class="loading-center"><mat-spinner diameter="40" /></div>
+  } @else {
   <mat-card>
     <mat-card-content>
       <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
@@ -110,13 +114,25 @@
           <span class="total-value">{{ getTotal() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
         </div>
 
+        <mat-divider class="section-divider" />
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Motivo da alteração *</mat-label>
+          <textarea matInput formControlName="comment" rows="3"
+            placeholder="Descreva o motivo da alteração..."></textarea>
+          @if (form.get('comment')?.hasError('required') && form.get('comment')?.touched) {
+          <mat-error>Informe o motivo da alteração</mat-error>
+          }
+        </mat-form-field>
+
         <div class="form-actions">
-          <button mat-button type="button" routerLink="/pedidos">Cancelar</button>
+          <button mat-button type="button" [routerLink]="'/pedidos/' + orderId">Cancelar</button>
           <button mat-flat-button color="primary" type="submit" [disabled]="saving()">
-            @if (saving()) { <mat-spinner diameter="20" /> } @else { Criar Pedido }
+            @if (saving()) { <mat-spinner diameter="20" /> } @else { Salvar Alterações }
           </button>
         </div>
       </form>
     </mat-card-content>
   </mat-card>
+  }
 </div>

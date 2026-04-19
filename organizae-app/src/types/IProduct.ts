@@ -17,4 +17,5 @@ export interface IProduct {
   subCategoryId: string | null;
   subCategoryName: string | null;
   tags: string[];
+  currentStock?: number;
 }
