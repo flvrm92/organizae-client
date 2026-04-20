@@ -145,7 +145,7 @@ export class OrderEdit implements OnInit {
       this.productSearchResults.set(results);
 
       const map = new Map(this.selectedProducts());
-      map.set(item.productId, { id: item.productId, code: null, name: item.productSnapshotName, price: item.unitPrice } as any);
+      map.set(item.productId, { id: item.productId, code: 0, name: item.productSnapshotName, price: item.unitPrice } as any);
       this.selectedProducts.set(map);
 
       this.setupProductSearch(index);
