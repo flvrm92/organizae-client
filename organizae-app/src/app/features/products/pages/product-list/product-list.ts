@@ -67,7 +67,7 @@ export class ProductList implements OnInit {
     const filtered = term
       ? this.products()
         .filter(p => p.name?.toLowerCase().includes(term) ||
-          p.code?.toLowerCase().includes(term) ||
+          p.code?.toString().includes(term) ||
           p.categoryName?.toLowerCase().includes(term) ||
           p.tags?.some(t => t.toLowerCase().includes(term)))
       : this.products();

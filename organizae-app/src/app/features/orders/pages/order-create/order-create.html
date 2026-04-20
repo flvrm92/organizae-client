@@ -41,7 +41,7 @@
                   @for (p of productSearchResults()[i]; track p.id) {
                   <mat-option [value]="p">
                     <div class="product-search-option">
-                      <span class="product-search-option__code">{{ p.code || 'Sem código' }}</span>
+                      <span class="product-search-option__code">{{ p.code }}</span>
                       <span class="product-search-option__name">
                         @for (segment of highlightProductName(p.name, productSearchControls[i].value); track $index) {
                         <span [class.product-search-option__match]="segment.highlight">{{ segment.text }}</span>
