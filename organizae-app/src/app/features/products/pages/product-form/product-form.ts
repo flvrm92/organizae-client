@@ -63,7 +63,6 @@ export class ProductForm implements OnInit {
   filteredSubCategories$!: Observable<ICategory[]>;
 
   form = this.fb.group({
-    code: ['', Validators.required],
     name: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
     price: [0, [Validators.required, Validators.min(0)]],
@@ -91,7 +90,7 @@ export class ProductForm implements OnInit {
     this.loading.set(true);
     this.productSvc.getById(id).subscribe({
       next: (p) => {
-        this.form.patchValue({ code: p.code, name: p.name, description: p.description, price: p.price, statusId: p.statusId, unitOfMeasureId: p.unitOfMeasureId, size: p.size, color: p.color, categoryId: p.categoryId, subCategoryId: p.subCategoryId });
+        this.form.patchValue({ name: p.name, description: p.description, price: p.price, statusId: p.statusId, unitOfMeasureId: p.unitOfMeasureId, size: p.size, color: p.color, categoryId: p.categoryId, subCategoryId: p.subCategoryId });
         if (p.categoryId) {
           this.categoryControl.setValue(p.categoryName || '');
           this.subCategories.set(this.allCategories().filter(c => c.parentCategoryId === p.categoryId));
