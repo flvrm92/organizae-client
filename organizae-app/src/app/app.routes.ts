@@ -122,6 +122,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'relatorios/fechamento',
+    loadComponent: () => import('./features/reports/pages/fechamento/fechamento').then(m => m.Fechamento),
+    canActivate: [authGuard]
+  },
+  {
     path: '',
     redirectTo: '/dashboard',
     pathMatch: 'full'

@@ -64,6 +64,10 @@ export class Navigation {
     { label: 'Movimentações', icon: 'swap_horiz', route: '/estoque/movimentacoes' },
   ];
 
+  readonly relatorioItems: NavItem[] = [
+    { label: 'Fechamento', icon: 'summarize', route: '/relatorios/fechamento' },
+  ];
+
   readonly configItems: NavItem[] = [
     { label: 'Configurações', icon: 'settings', route: '/configuracoes' },
   ];
