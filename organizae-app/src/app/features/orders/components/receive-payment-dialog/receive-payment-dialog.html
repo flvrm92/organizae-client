@@ -8,19 +8,47 @@
     <mat-spinner diameter="40" />
   </div>
   } @else {
-  <p class="mb-4">Valor do pedido: <strong>{{ data.orderTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Forma de Pagamento</mat-label>
-    <mat-select [(ngModel)]="selectedPaymentMethodId">
-      @for (pm of paymentMethods(); track pm.id) {
-      <mat-option [value]="pm.id">{{ pm.name }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+  <div class="summary-area">
+    <p class="summary-item">Valor do Pedido: <strong>{{ data.orderTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR'
+        }}</strong></p>
+    <p class="summary-item">Total Pago: <strong class="text-success">{{ totalPaid() |
+        currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p>
+    <p class="summary-item mb-4">Restante: <strong class="text-warn">{{ remainingTotal() |
+        currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></p>
+  </div>
+
+  <div class="payment-rows">
+    @for (payment of payments(); track $index) {
+    <div class="payment-row">
+      <mat-form-field appearance="outline" class="payment-method-field">
+        <mat-label>Forma de Pagamento</mat-label>
+        <mat-select [(ngModel)]="payment.methodId">
+          @for (pm of paymentMethods(); track pm.id) {
+          <mat-option [value]="pm.id">{{ pm.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="payment-amount-field">
+        <mat-label>Valor</mat-label>
+        <input matInput type="number" [(ngModel)]="payment.amount" />
+      </mat-form-field>
+
+      <button mat-icon-button color="warn" class="remove-payment-btn" (click)="removePayment($index)"
+        [disabled]="payments().length === 1" aria-label="Remover pagamento">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    }
+  </div>
+
+  <button mat-button color="primary" class="add-payment-btn" (click)="addPayment()">
+    <mat-icon>add</mat-icon> Adicionar Pagamento
+  </button>
   }
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="cancel()">Cancelar</button>
-  <button mat-flat-button color="primary" (click)="confirm()"
-    [disabled]="!selectedPaymentMethodId || loading()">Confirmar Recebimento</button>
+  <button mat-flat-button color="primary" (click)="confirm()" [disabled]="!isValid() || loading()">Confirmar
+    Recebimento</button>
 </mat-dialog-actions>

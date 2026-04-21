@@ -77,11 +77,11 @@
         <td mat-cell *matCellDef="let row">
           <button mat-icon-button [routerLink]="['/pedidos', row.id]"
             matTooltip="Ver detalhes"><mat-icon>visibility</mat-icon></button>
-          @if (row.statusName === 'Ativo') {
+          @if (row.statusName === 'Ativo' || row.statusName === 'Pendente') {
           <button mat-icon-button color="primary" (click)="receiveOrder(row)"
             matTooltip="Receber pedido"><mat-icon>payments</mat-icon></button>
           }
-          @if (row.statusName !== 'Cancelado') {
+          @if (row.statusName !== 'Cancelado' && !row.hasPayments) {
           <button mat-icon-button color="warn" (click)="cancelOrder(row)"
             matTooltip="Cancelar Pedido"><mat-icon>cancel</mat-icon></button>
           }

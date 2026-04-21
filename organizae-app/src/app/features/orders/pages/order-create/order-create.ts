@@ -14,13 +14,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatDialog } from '@angular/material/dialog';
 import { CurrencyPipe } from '@angular/common';
 import { OrderService } from '../../services/order.service';
 import { CustomerService } from '../../../customers/services/customer.service';
 import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
-import { ReceivePaymentDialog, ReceivePaymentDialogResult } from '../../components/receive-payment-dialog/receive-payment-dialog';
 import { getHighlightSegments, HighlightSegment } from '../../../../shared/utils/highlight-match';
 import { ICustomerSearch } from '../../../../../types/ICustomerSearch';
 import { IProduct } from '../../../../../types/IProduct';
@@ -38,7 +36,6 @@ export class OrderCreate implements OnInit {
   private readonly productSvc = inject(ProductService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
-  private readonly dialog = inject(MatDialog);
   private readonly destroyRef = inject(DestroyRef);
 
   customerSearchControl = new FormControl('');
@@ -206,27 +203,7 @@ export class OrderCreate implements OnInit {
       next: (order) => {
         this.saving.set(false);
         this.snackBar.open('Pedido criado!', 'Fechar', { duration: 3000 });
-        const ref = this.dialog.open(ReceivePaymentDialog, {
-          data: { orderId: order.id, orderCode: order.code, orderTotal: order.subTotal },
-          width: '440px',
-          disableClose: true
-        });
-        ref.afterClosed().subscribe((result: ReceivePaymentDialogResult | false) => {
-          if (result) {
-            this.orderSvc.receive(order.id, result.paymentMethodId, result.amount).subscribe({
-              next: () => {
-                this.snackBar.open('Pagamento registrado!', 'Fechar', { duration: 3000 });
-                this.router.navigate(['/pedidos', order.id]);
-              },
-              error: () => {
-                this.snackBar.open('Erro ao registrar pagamento', 'Fechar', { duration: 5000 });
-                this.router.navigate(['/pedidos', order.id]);
-              }
-            });
-          } else {
-            this.router.navigate(['/pedidos', order.id]);
-          }
-        });
+        this.router.navigate(['/pedidos', order.id]);
       },
       error: (err) => { this.saving.set(false); this.snackBar.open(err?.error?.detail ?? 'Erro ao criar pedido', 'Fechar', { duration: 5000 }); }
     });

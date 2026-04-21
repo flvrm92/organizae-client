@@ -1,4 +1,5 @@
 import { IOrderItem } from './IOrderItem';
+import { IOrderPayment } from './IOrderPayment';
 
 export interface IOrder {
   id: string;
@@ -11,4 +12,8 @@ export interface IOrder {
   createdAt: string;
   updatedAt: string | null;
   orderItems: IOrderItem[] | null;
+  payments: IOrderPayment[];
+  totalPaid: number;
+  balance: number;
+  hasPayments: boolean;
 }

@@ -1,0 +1,309 @@
+<div class="page-container">
+  <app-page-header title="Fechamento" subtitle="Relatório de pagamentos recebidos por período" />
+
+  <!-- Filters -->
+  <div class="filters-card card-elevated">
+    <div class="filters-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Data Inicial *</mat-label>
+        <input matInput [matDatepicker]="pickerStart" [formControl]="startDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="pickerStart" />
+        <mat-datepicker #pickerStart />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Data Final *</mat-label>
+        <input matInput [matDatepicker]="pickerEnd" [formControl]="endDate" />
+        <mat-datepicker-toggle matIconSuffix [for]="pickerEnd" />
+        <mat-datepicker #pickerEnd />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Cliente</mat-label>
+        <mat-icon matPrefix>person_search</mat-icon>
+        <input matInput [formControl]="customerSearchControl" [matAutocomplete]="autoCustomer"
+          placeholder="Buscar cliente..." />
+        @if (selectedCustomer()) {
+        <button matSuffix mat-icon-button (click)="clearCustomer()" type="button" matTooltip="Limpar">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+        <mat-autocomplete #autoCustomer="matAutocomplete" [displayWith]="displayCustomer"
+          (optionSelected)="onCustomerSelected($event.option.value)">
+          @for (c of customerResults(); track c.id) {
+          <mat-option [value]="c">{{ c.firstName }} {{ c.lastName }} — {{ c.document }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select [formControl]="selectedStatusId">
+          <mat-option [value]="null">Todos</mat-option>
+          @for (s of statuses(); track s.id) {
+          <mat-option [value]="s.id">{{ s.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Produto</mat-label>
+        <mat-icon matPrefix>inventory_2</mat-icon>
+        <input matInput [formControl]="productSearchControl" [matAutocomplete]="autoProduct"
+          placeholder="Buscar produto..." />
+        @if (selectedProduct()) {
+        <button matSuffix mat-icon-button (click)="clearProduct()" type="button" matTooltip="Limpar">
+          <mat-icon>close</mat-icon>
+        </button>
+        }
+        <mat-autocomplete #autoProduct="matAutocomplete" [displayWith]="displayProduct"
+          (optionSelected)="onProductSelected($event.option.value)">
+          @for (p of productResults(); track p.id) {
+          <mat-option [value]="p">{{ p.name }}</mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Categoria</mat-label>
+        <mat-select [formControl]="selectedCategoryId">
+          <mat-option [value]="null">Todas</mat-option>
+          @for (c of topLevelCategories(); track c.id) {
+          <mat-option [value]="c.id">{{ c.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Subcategoria</mat-label>
+        <mat-select [formControl]="selectedSubcategoryId">
+          <mat-option [value]="null">Todas</mat-option>
+          @for (s of subcategoryOptions(); track s.id) {
+          <mat-option [value]="s.id">{{ s.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filters-actions">
+      <button mat-button (click)="clearFilters()">
+        <mat-icon>clear</mat-icon> Limpar Filtros
+      </button>
+      <button mat-flat-button color="primary" [disabled]="!canGenerate" (click)="generateReport()">
+        <mat-icon>summarize</mat-icon> Gerar Relatório
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  @if (loading()) {
+  <div class="loading-center">
+    <mat-spinner diameter="48" />
+  </div>
+  }
+
+  <!-- Pre-fetch state -->
+  @if (!loading() && !hasFetched()) {
+  <div class="empty-state-placeholder">
+    <mat-icon>query_stats</mat-icon>
+    <p>Selecione o período desejado e clique em <strong>Gerar Relatório</strong>.</p>
+  </div>
+  }
+
+  <!-- Error state -->
+  @if (!loading() && hasFetched() && errorMessage()) {
+  <div class="error-state card-elevated">
+    <mat-icon>error_outline</mat-icon>
+    <p>{{ errorMessage() }}</p>
+  </div>
+  }
+
+  <!-- Results -->
+  @if (!loading() && hasFetched() && !errorMessage()) {
+  @if (report(); as data) {
+
+  <!-- Summary metrics -->
+  <div class="summary-metrics">
+    <div class="metric-card card-elevated">
+      <mat-icon class="metric-icon">payments</mat-icon>
+      <span class="metric-label">Total Recebido</span>
+      <span class="metric-value metric-value--highlight">
+        {{ data.summary.totalReceived | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+      </span>
+    </div>
+    <div class="metric-card card-elevated">
+      <mat-icon class="metric-icon">receipt_long</mat-icon>
+      <span class="metric-label">Pagamentos</span>
+      <span class="metric-value">{{ data.summary.totalPayments }}</span>
+    </div>
+    <div class="metric-card card-elevated">
+      <mat-icon class="metric-icon">shopping_cart</mat-icon>
+      <span class="metric-label">Pedidos</span>
+      <span class="metric-value">{{ data.summary.totalOrders }}</span>
+    </div>
+  </div>
+
+  <!-- Summary by method and status -->
+  <div class="summary-tables">
+    <div class="summary-table-card card-elevated">
+      <h3 class="section-title">Por Método de Pagamento</h3>
+      <table mat-table [dataSource]="data.summary.byPaymentMethod" class="summary-table">
+        <ng-container matColumnDef="method">
+          <th mat-header-cell *matHeaderCellDef>Método</th>
+          <td mat-cell *matCellDef="let row">{{ row.paymentMethodName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="count">
+          <th mat-header-cell *matHeaderCellDef>Qtd.</th>
+          <td mat-cell *matCellDef="let row">{{ row.count }}</td>
+        </ng-container>
+        <ng-container matColumnDef="total">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let row" class="amount-cell">
+            {{ row.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['method','count','total']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['method','count','total'];"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="3">
+            <div class="empty-table-row">Sem dados</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="summary-table-card card-elevated">
+      <h3 class="section-title">Por Status</h3>
+      <table mat-table [dataSource]="data.summary.byStatus" class="summary-table">
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">{{ row.statusName }}</td>
+        </ng-container>
+        <ng-container matColumnDef="orderCount">
+          <th mat-header-cell *matHeaderCellDef>Pedidos</th>
+          <td mat-cell *matCellDef="let row">{{ row.orderCount }}</td>
+        </ng-container>
+        <ng-container matColumnDef="paymentTotal">
+          <th mat-header-cell *matHeaderCellDef>Total</th>
+          <td mat-cell *matCellDef="let row" class="amount-cell">
+            {{ row.paymentTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['status','orderCount','paymentTotal']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['status','orderCount','paymentTotal'];"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" colspan="3">
+            <div class="empty-table-row">Sem dados</div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detailed rows -->
+  @if (data.rows.length > 0) {
+  <div class="detail-table-card card-elevated">
+    <h3 class="section-title">Detalhamento de Pagamentos</h3>
+    <div class="table-scroll">
+      <table mat-table [dataSource]="data.rows" multiTemplateDataRows class="detail-table">
+
+        <ng-container matColumnDef="paymentDate">
+          <th mat-header-cell *matHeaderCellDef>Data Pgto.</th>
+          <td mat-cell *matCellDef="let row">{{ row.paymentDate | date:'dd/MM/yyyy':'':'pt-BR' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="orderCode">
+          <th mat-header-cell *matHeaderCellDef>Pedido</th>
+          <td mat-cell *matCellDef="let row" class="code-cell">#{{ row.orderCode }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="customerName">
+          <th mat-header-cell *matHeaderCellDef>Cliente</th>
+          <td mat-cell *matCellDef="let row">{{ row.customerName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="paymentMethodName">
+          <th mat-header-cell *matHeaderCellDef>Método</th>
+          <td mat-cell *matCellDef="let row">{{ row.paymentMethodName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="paymentAmount">
+          <th mat-header-cell *matHeaderCellDef>Valor Pgto.</th>
+          <td mat-cell *matCellDef="let row" class="amount-cell">
+            {{ row.paymentAmount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="orderSubTotal">
+          <th mat-header-cell *matHeaderCellDef>Total Pedido</th>
+          <td mat-cell *matCellDef="let row" class="amount-cell">
+            {{ row.orderSubTotal | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="statusName">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let row">
+            <mat-chip-set><mat-chip>{{ row.statusName }}</mat-chip></mat-chip-set>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="expand">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let row" class="expand-cell">
+            @if (row.orderItems?.length > 0) {
+            <button mat-icon-button (click)="toggleRow(row)"
+              [matTooltip]="isExpanded(row) ? 'Fechar itens' : 'Ver itens'">
+              <mat-icon>{{ isExpanded(row) ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
+            }
+          </td>
+        </ng-container>
+
+        <!-- Expandable detail row -->
+        <ng-container matColumnDef="expandedDetail">
+          <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length" class="expanded-detail-cell">
+            @if (isExpanded(row)) {
+            <div class="expanded-items">
+              <table class="items-inner-table">
+                <thead>
+                  <tr>
+                    <th>Produto</th>
+                    <th class="num-col">Qtd.</th>
+                    <th class="num-col">Preço Unit.</th>
+                    <th class="num-col">Desconto</th>
+                    <th class="num-col">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of row.orderItems; track item.productSnapshotName) {
+                  <tr>
+                    <td>{{ item.productSnapshotName }}</td>
+                    <td class="num-col">{{ item.quantity }}</td>
+                    <td class="num-col">{{ item.unitPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                    <td class="num-col">{{ item.discount | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                    <td class="num-col">{{ item.total | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="main-data-row"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-data-row"></tr>
+      </table>
+    </div>
+  </div>
+  } @else {
+  <div class="empty-state-placeholder">
+    <mat-icon>inbox</mat-icon>
+    <p>Nenhum pagamento encontrado para o período e filtros selecionados.</p>
+  </div>
+  }
+  }
+  }
+</div>

@@ -36,8 +36,8 @@ export class OrderService {
     return this.api.put<IOrder>(`/api/Order/${id}`, payload);
   }
 
-  receive(id: string, paymentMethodId: string, amount: number): Observable<boolean> {
-    return this.api.post<boolean>(`/api/Order/${id}/receive`, { paymentMethodId, amount });
+  receive(id: string, payments: { paymentMethodId: string; amount: number }[]): Observable<void> {
+    return this.api.post<void>(`/api/Order/${id}/receive`, { payments });
   }
 
   cancel(id: string): Observable<void> {

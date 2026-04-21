@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,11 +15,16 @@ export interface ReceivePaymentDialogData {
   orderId: string;
   orderCode: number;
   orderTotal: number;
+  remainingBalance: number;
+}
+
+export interface PaymentRow {
+  methodId: string;
+  amount: number;
 }
 
 export interface ReceivePaymentDialogResult {
-  paymentMethodId: string;
-  amount: number;
+  payments: { paymentMethodId: string; amount: number }[];
 }
 
 @Component({
@@ -35,20 +40,40 @@ export class ReceivePaymentDialog implements OnInit {
 
   paymentMethods = signal<IPaymentMethod[]>([]);
   loading = signal(true);
-  selectedPaymentMethodId = '';
-  amount = 0;
+  payments = signal<PaymentRow[]>([{ methodId: '', amount: 0 }]);
+
+  totalPaid = computed(() => this.payments().reduce((sum, p) => sum + (p.amount || 0), 0));
+  remainingTotal = computed(() => Math.max(0, this.data.remainingBalance - this.totalPaid()));
 
   ngOnInit(): void {
-    this.amount = this.data.orderTotal;
+    this.payments.set([{ methodId: '', amount: this.data.remainingBalance }]);
     this.paymentMethodSvc.getAll().subscribe({
       next: (methods) => { this.paymentMethods.set(methods); this.loading.set(false); },
       error: () => { this.loading.set(false); }
     });
   }
 
+  addPayment(): void {
+    this.payments.update(rows => [...rows, { methodId: '', amount: 0 }]);
+  }
+
+  removePayment(index: number): void {
+    this.payments.update(rows => rows.filter((_, i) => i !== index));
+  }
+
+  isValid(): boolean {
+    const rows = this.payments();
+    if (rows.length === 0) return false;
+    const allFilled = rows.every(p => p.methodId && p.amount > 0);
+    const total = rows.reduce((sum, p) => sum + (p.amount || 0), 0);
+    return allFilled && total > 0 && total <= this.data.remainingBalance + 0.001;
+  }
+
   confirm(): void {
-    if (!this.selectedPaymentMethodId) return;
-    this.dialogRef.close({ paymentMethodId: this.selectedPaymentMethodId, amount: this.amount } as ReceivePaymentDialogResult);
+    if (!this.isValid()) return;
+    this.dialogRef.close({
+      payments: this.payments().map(p => ({ paymentMethodId: p.methodId, amount: p.amount }))
+    } as ReceivePaymentDialogResult);
   }
 
   cancel(): void {
