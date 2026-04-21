@@ -46,6 +46,17 @@
         }
       </div>
 
+      <div class="nav-section-label">Relatórios</div>
+      <div class="nav-group">
+        @for (item of relatorioItems; track item.route) {
+        <a mat-list-item class="nav-item mb-1" [routerLink]="item.route" routerLinkActive="active-link"
+          (click)="isHandset && sidenav.close()">
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+        }
+      </div>
+
       <div class="nav-section-label">Configurações</div>
       <div class="nav-group">
         @for (item of configItems; track item.route) {

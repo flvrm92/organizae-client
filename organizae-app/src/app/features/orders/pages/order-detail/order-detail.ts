@@ -44,6 +44,7 @@ export class OrderDetail implements OnInit {
   history = signal<IOrderHistory[]>([]);
   loading = signal(false);
   itemColumns = ['productSnapshotName', 'quantity', 'unitPrice', 'discount', 'total'];
+  paymentColumns = ['paymentMethodName', 'amount', 'createdAt'];
   isEditable = computed(() => this.order()?.statusName === 'Ativo');
 
   ngOnInit(): void {

@@ -120,3 +120,36 @@ mat-card-header {
   height: 0.875rem;
   margin-top: 2px;
 }
+
+.payments-card {
+  margin-top: 1.5rem;
+}
+
+.text-success {
+  color: #388e3c;
+}
+
+.text-warn {
+  color: #f44336;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-muted {
+  color: #757575;
+  font-style: italic;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.payments-summary {
+  background-color: var(--app-background-alt, #fafafa);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--app-border, #eee);
+  margin-bottom: 1rem;
+}
