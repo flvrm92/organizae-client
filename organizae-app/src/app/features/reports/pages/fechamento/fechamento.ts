@@ -27,7 +27,7 @@ import { IFechamentoReport, IFechamentoReportRow } from '../../../../../types/IF
 import { IStatus } from '../../../../../types/IStatus';
 import { ICategory } from '../../../../../types/ICategory';
 import { ICustomerSearch } from '../../../../../types/ICustomerSearch';
-import { IProduct } from '../../../../../types/IProduct';
+import { IProductSearch } from '../../../../../types/IProductSearch';
 
 @Component({
   selector: 'app-fechamento',
@@ -79,9 +79,9 @@ export class Fechamento implements OnInit {
 
   // --- Autocomplete state ---
   customerResults = signal<ICustomerSearch[]>([]);
-  productResults = signal<IProduct[]>([]);
+  productResults = signal<IProductSearch[]>([]);
   selectedCustomer = signal<ICustomerSearch | null>(null);
-  selectedProduct = signal<IProduct | null>(null);
+  selectedProduct = signal<IProductSearch | null>(null);
 
   // --- Report state ---
   loading = signal(false);
@@ -100,7 +100,7 @@ export class Fechamento implements OnInit {
   readonly displayCustomer = (c: ICustomerSearch | null): string =>
     c ? `${c.firstName} ${c.lastName}` : '';
 
-  readonly displayProduct = (p: IProduct | null): string =>
+  readonly displayProduct = (p: IProductSearch | null): string =>
     p ? (p.name ?? '') : '';
 
   get canGenerate(): boolean {
@@ -149,7 +149,7 @@ export class Fechamento implements OnInit {
     this.selectedCustomer.set(customer);
   }
 
-  onProductSelected(product: IProduct): void {
+  onProductSelected(product: IProductSearch): void {
     this.selectedProduct.set(product);
   }
 

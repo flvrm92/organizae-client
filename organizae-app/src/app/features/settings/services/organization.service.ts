@@ -11,8 +11,8 @@ export class OrganizationService {
     return this.api.get<IOrganizationConfig>('/api/Organization');
   }
 
-  updateTitle(title: string): Observable<IOrganizationConfig> {
-    return this.api.put<IOrganizationConfig>('/api/Organization', { title });
+  updateConfig(title: string, estimatedPercentageOfGainPerProduct: number): Observable<IOrganizationConfig> {
+    return this.api.put<IOrganizationConfig>('/api/Organization', { title, estimatedPercentageOfGainPerProduct });
   }
 
   uploadLogo(file: File): Observable<IOrganizationConfig> {
