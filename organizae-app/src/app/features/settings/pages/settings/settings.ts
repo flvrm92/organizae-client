@@ -31,6 +31,7 @@ export class Settings implements OnInit, OnDestroy {
   private readonly app = inject(ApplicationService);
 
   title = signal('');
+  gainPercentage = signal<number | null>(null);
   selectedFile = signal<File | null>(null);
   previewUrl = signal<string | null>(null);
   savingTitle = signal(false);
@@ -40,21 +41,23 @@ export class Settings implements OnInit, OnDestroy {
     this.orgService.getConfig().subscribe({
       next: (config) => {
         this.title.set(config.title);
+        this.gainPercentage.set(config.estimatedPercentageOfGainPerProduct);
       }
     });
   }
 
-  saveTitle(): void {
-    if (!this.title().trim()) return;
+  saveConfig(): void {
+    const gain = this.gainPercentage();
+    if (!this.title().trim() || gain === null || gain < 0) return;
     this.savingTitle.set(true);
-    this.orgService.updateTitle(this.title().trim()).subscribe({
+    this.orgService.updateConfig(this.title().trim(), gain).subscribe({
       next: (config) => {
         this.orgStore.refreshAfterUpdate(config);
-        this.app.displayMessage('Título atualizado com sucesso');
+        this.app.displayMessage('Configurações salvas com sucesso');
         this.savingTitle.set(false);
       },
       error: () => {
-        this.app.displayMessage('Erro ao atualizar título');
+        this.app.displayMessage('Erro ao salvar configurações');
         this.savingTitle.set(false);
       }
     });

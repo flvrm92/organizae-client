@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { IProduct } from '../../../../types/IProduct';
+import { IProductSearch } from '../../../../types/IProductSearch';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -30,7 +31,7 @@ export class ProductService {
     return this.api.delete<void>(`/api/Product/${id}`);
   }
 
-  search(q: string, inStockOnly = false): Observable<IProduct[]> {
-    return this.api.get<IProduct[]>('/api/Product/search', { q, inStockOnly: String(inStockOnly) });
+  search(q: string, inStockOnly = false): Observable<IProductSearch[]> {
+    return this.api.get<IProductSearch[]>('/api/Product/search', { q, inStockOnly: String(inStockOnly) });
   }
 }

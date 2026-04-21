@@ -11,9 +11,11 @@ export class OrganizationStore implements OnDestroy {
   private readonly _title = signal<string>('Organizae');
   private readonly _logoUrl = signal<string | null>(null);
   private readonly _hasLogo = signal<boolean>(false);
+  private readonly _defaultGainPercentage = signal<number | null>(null);
 
   readonly displayTitle = computed(() => this._title());
   readonly displayLogoUrl = computed(() => this._logoUrl());
+  readonly defaultGainPercentage = computed(() => this._defaultGainPercentage());
 
   loadConfig(): void {
     if (!this.auth.isAuthenticated()) return;
@@ -22,6 +24,7 @@ export class OrganizationStore implements OnDestroy {
       next: (config) => {
         this._title.set(config.title);
         this._hasLogo.set(config.hasLogo);
+        this._defaultGainPercentage.set(config.estimatedPercentageOfGainPerProduct);
         if (config.hasLogo) {
           this.loadLogo();
         } else {
@@ -34,6 +37,7 @@ export class OrganizationStore implements OnDestroy {
   refreshAfterUpdate(config: IOrganizationConfig): void {
     this._title.set(config.title);
     this._hasLogo.set(config.hasLogo);
+    this._defaultGainPercentage.set(config.estimatedPercentageOfGainPerProduct);
     if (config.hasLogo) {
       this.loadLogo();
     } else {

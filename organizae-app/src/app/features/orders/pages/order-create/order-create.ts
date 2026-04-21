@@ -21,7 +21,7 @@ import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { getHighlightSegments, HighlightSegment } from '../../../../shared/utils/highlight-match';
 import { ICustomerSearch } from '../../../../../types/ICustomerSearch';
-import { IProduct } from '../../../../../types/IProduct';
+import { IProductSearch } from '../../../../../types/IProductSearch';
 
 @Component({
   selector: 'app-order-create',
@@ -41,8 +41,8 @@ export class OrderCreate implements OnInit {
   customerSearchControl = new FormControl('');
   customerSearchResults = signal<ICustomerSearch[]>([]);
   productSearchControls: FormControl[] = [];
-  productSearchResults = signal<IProduct[][]>([]);
-  selectedProducts = signal<Map<string, IProduct>>(new Map());
+  productSearchResults = signal<IProductSearch[][]>([]);
+  selectedProducts = signal<Map<string, IProductSearch>>(new Map());
   saving = signal(false);
   itemsData = signal<{ productId: string; quantity: number; discount: number }[]>([]);
   itemColumns = ['product', 'quantity', 'price', 'discount', 'subtotal', 'remove'];
@@ -156,7 +156,7 @@ export class OrderCreate implements OnInit {
     return customer ? `${customer.firstName} ${customer.lastName}` : '';
   }
 
-  displayProductFn(product: IProduct | null): string {
+  displayProductFn(product: IProductSearch | null): string {
     return product ? `${product.code} — ${product.name}` : '';
   }
 
@@ -165,7 +165,7 @@ export class OrderCreate implements OnInit {
   }
 
   onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
-    const product = event.option.value as IProduct;
+    const product = event.option.value as IProductSearch;
     this.items.at(index).patchValue({ productId: product.id, unitPrice: product.price });
     const map = new Map(this.selectedProducts());
     map.set(product.id, product);

@@ -11,12 +11,20 @@
       <mat-hint>Este nome será exibido na barra de navegação</mat-hint>
     </mat-form-field>
 
+    <mat-form-field appearance="outline" class="full-width mt-2">
+      <mat-label>Porcentagem Estimada de Ganho Por Produto</mat-label>
+      <input matInput type="number" min="0" step="0.0001" [ngModel]="gainPercentage()"
+        (ngModelChange)="gainPercentage.set($event)" placeholder="Ex: 50" />
+      <mat-hint>Valor em % (ex: 50 = 50%). Aceita até 4 casas decimais.</mat-hint>
+    </mat-form-field>
+
     <div class="actions">
-      <button mat-flat-button color="primary" (click)="saveTitle()" [disabled]="savingTitle() || !title().trim()">
+      <button mat-flat-button color="primary" (click)="saveConfig()"
+        [disabled]="savingTitle() || !title().trim() || gainPercentage() === null || gainPercentage()! < 0">
         @if (savingTitle()) {
         Salvando...
         } @else {
-        Salvar Título
+        Salvar Informações
         }
       </button>
     </div>

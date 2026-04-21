@@ -9,6 +9,23 @@
   grid-column: 1 / -1;
 }
 
+.field-blocked ::ng-deep .mdc-text-field--outlined {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.hint-info {
+  display: flex !important;
+  align-items: center;
+  gap: 4px;
+  color: var(--app-primary);
+}
+
+.hint-info mat-icon {
+  font-size: 14px;
+  width: 14px;
+  height: 14px;
+}
+
 .form-actions {
   display: flex;
   align-items: center;
