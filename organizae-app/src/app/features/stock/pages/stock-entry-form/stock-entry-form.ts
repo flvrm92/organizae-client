@@ -20,7 +20,7 @@ import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { getHighlightSegments, HighlightSegment } from '../../../../shared/utils/highlight-match';
 import { ISupplierSearch } from '../../../../../types/ISupplierSearch';
-import { IProduct } from '../../../../../types/IProduct';
+import { IProductSearch } from '../../../../../types/IProductSearch';
 
 @Component({
   selector: 'app-stock-entry-form',
@@ -40,7 +40,7 @@ export class StockEntryForm implements OnInit {
   supplierSearchControl = new FormControl('');
   supplierSearchResults = signal<ISupplierSearch[]>([]);
   productSearchControls: FormControl[] = [];
-  productSearchResults = signal<IProduct[][]>([]);
+  productSearchResults = signal<IProductSearch[][]>([]);
   saving = signal(false);
   movementColumns = ['product', 'quantity', 'costPrice', 'remove'];
   itemsData = signal<{ productId: string; quantity: number; costPrice: number }[]>([]);
@@ -136,7 +136,7 @@ export class StockEntryForm implements OnInit {
     });
   }
 
-  displayProductFn(product: IProduct | null): string {
+  displayProductFn(product: IProductSearch | null): string {
     return product ? `${product.code} — ${product.name}` : '';
   }
 
@@ -145,7 +145,7 @@ export class StockEntryForm implements OnInit {
   }
 
   onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
-    const product = event.option.value as IProduct;
+    const product = event.option.value as IProductSearch;
     this.movements.at(index).patchValue({ productId: product.id });
   }
 

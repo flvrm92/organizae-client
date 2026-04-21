@@ -18,4 +18,6 @@ export interface IProduct {
   subCategoryName: string | null;
   tags: string[];
   currentStock?: number;
+  costPrice: number;
+  gainPercentage: number;
 }

@@ -21,7 +21,7 @@ import { ProductService } from '../../../products/services/product.service';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { getHighlightSegments, HighlightSegment } from '../../../../shared/utils/highlight-match';
 import { ICustomerSearch } from '../../../../../types/ICustomerSearch';
-import { IProduct } from '../../../../../types/IProduct';
+import { IProductSearch } from '../../../../../types/IProductSearch';
 import { IOrder } from '../../../../../types/IOrder';
 
 @Component({
@@ -62,8 +62,8 @@ export class OrderEdit implements OnInit {
   customerSearchControl = new FormControl('');
   customerSearchResults = signal<ICustomerSearch[]>([]);
   productSearchControls: FormControl[] = [];
-  productSearchResults = signal<IProduct[][]>([]);
-  selectedProducts = signal<Map<string, IProduct>>(new Map());
+  productSearchResults = signal<IProductSearch[][]>([]);
+  selectedProducts = signal<Map<string, IProductSearch>>(new Map());
   itemsData = signal<any[]>([]);
   itemColumns = ['product', 'quantity', 'price', 'discount', 'subtotal', 'remove'];
 
@@ -145,7 +145,11 @@ export class OrderEdit implements OnInit {
       this.productSearchResults.set(results);
 
       const map = new Map(this.selectedProducts());
-      map.set(item.productId, { id: item.productId, code: 0, name: item.productSnapshotName, price: item.unitPrice } as any);
+      map.set(item.productId, {
+        id: item.productId, code: 0,
+        name: item.productSnapshotName,
+        price: item.unitPrice
+      } as IProductSearch);
       this.selectedProducts.set(map);
 
       this.setupProductSearch(index);
@@ -231,7 +235,7 @@ export class OrderEdit implements OnInit {
     return `${customer.firstName} ${customer.lastName}`;
   }
 
-  displayProductFn(product: IProduct | string | null): string {
+  displayProductFn(product: IProductSearch | string | null): string {
     if (!product) return '';
     if (typeof product === 'string') return product;
     return `${product.code} — ${product.name}`;
@@ -242,7 +246,7 @@ export class OrderEdit implements OnInit {
   }
 
   onProductSelected(event: MatAutocompleteSelectedEvent, index: number): void {
-    const product = event.option.value as IProduct;
+    const product = event.option.value as IProductSearch;
     this.items.at(index).patchValue({ productId: product.id, unitPrice: product.price });
     const map = new Map(this.selectedProducts());
     map.set(product.id, product);
