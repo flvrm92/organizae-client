@@ -18,3 +18,54 @@
   color: var(--app-primary);
   font-weight: 700;
 }
+
+.summary-area {
+  background-color: var(--app-background-alt, #fafafa);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.summary-item {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.text-success {
+  color: #388e3c;
+}
+
+.text-warn {
+  color: #f44336;
+}
+
+.payment-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.payment-method-field {
+  flex: 2;
+}
+
+.payment-amount-field {
+  flex: 1;
+}
+
+.remove-payment-btn {
+  margin-bottom: 1.25rem;
+}
+
+.add-payment-btn {
+  margin-top: 0.5rem;
+}

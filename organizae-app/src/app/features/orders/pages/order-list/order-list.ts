@@ -1,4 +1,5 @@
 import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -182,22 +183,28 @@ export class OrderList implements OnInit {
           this.snackBar.open('Pedido cancelado!', 'Fechar', { duration: 3000 });
           this.loadOrders();
         },
-        error: () => this.snackBar.open('Erro ao cancelar pedido', 'Fechar', { duration: 3000 })
+        error: (err: HttpErrorResponse) => {
+          const msg = err.error?.detail || err.error?.title || 'Erro ao cancelar pedido';
+          this.snackBar.open(msg, 'Fechar', { duration: 4000 });
+        }
       });
     });
   }
 
   receiveOrder(order: IOrder): void {
     const ref = this.dialog.open(ReceivePaymentDialog, {
-      data: { orderId: order.id, orderCode: order.code, orderTotal: order.subTotal },
-      width: '440px',
+      data: { orderId: order.id, orderCode: order.code, orderTotal: order.subTotal, remainingBalance: order.balance },
+      width: '540px',
       disableClose: true
     });
     ref.afterClosed().subscribe((result: ReceivePaymentDialogResult | false) => {
       if (!result) return;
-      this.orderSvc.receive(order.id, result.paymentMethodId, result.amount).subscribe({
+      this.orderSvc.receive(order.id, result.payments).subscribe({
         next: () => { this.snackBar.open('Pagamento registrado!', 'Fechar', { duration: 3000 }); this.loadOrders(); },
-        error: () => this.snackBar.open('Erro ao registrar pagamento', 'Fechar', { duration: 3000 })
+        error: (err: HttpErrorResponse) => {
+          const msg = err.error?.detail || err.error?.title || 'Erro ao registrar pagamento';
+          this.snackBar.open(msg, 'Fechar', { duration: 4000 });
+        }
       });
     });
   }
