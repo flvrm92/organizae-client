@@ -24,7 +24,7 @@ describe('CategoryForm – filterCategories', () => {
     getById: () => of({ id: 'cat-1', name: 'Frutas', organizationId: 'org-1', parentCategoryId: null, parentCategoryName: null } as ICategory),
     create: () => of({}),
     update: () => of({}),
-    refresh: () => {},
+    refresh: () => { },
   };
 
   beforeEach(async () => {
@@ -75,7 +75,6 @@ describe('CategoryForm – filterCategories', () => {
 
     it('returns all root categories for an empty query', () => {
       const result = component.filterCategories('');
-      // In create mode, categoryId is null so no self-exclusion applies.
       expect(result).toHaveLength(ROOT_CATEGORIES.length);
     });
   });

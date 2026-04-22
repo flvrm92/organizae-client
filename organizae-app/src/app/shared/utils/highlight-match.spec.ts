@@ -87,15 +87,12 @@ describe('getHighlightSegments', () => {
 
     it('highlights overlapping terms as a single merged segment', () => {
       const result = getHighlightSegments('abcdef', 'abc def');
-      // 'abc' highlights [0-2], 'def' highlights [3-5], merged = all highlighted
       expect(result).toEqual([{ text: 'abcdef', highlight: true }]);
     });
   });
 
   describe('alignment with normalize', () => {
     it('produces the same match result as matchesQuery for accent cases', () => {
-      // getHighlightSegments highlights iff the term is a substring in normalized space —
-      // the same rule matchesQuery uses — so a highlighted result implies a boolean match.
       const result = getHighlightSegments('Ação', 'acao');
       expect(result.some((s: HighlightSegment) => s.highlight)).toBe(true);
     });

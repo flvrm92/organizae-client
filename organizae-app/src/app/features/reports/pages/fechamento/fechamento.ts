@@ -62,7 +62,6 @@ export class Fechamento implements OnInit {
   private readonly statusSvc = inject(StatusService);
   private readonly destroyRef = inject(DestroyRef);
 
-  // --- Filter form controls ---
   startDate = new FormControl<Date | null>(null);
   endDate = new FormControl<Date | null>(null);
   customerSearchControl = new FormControl('');
@@ -71,19 +70,16 @@ export class Fechamento implements OnInit {
   selectedCategoryId = new FormControl<string | null>(null);
   selectedSubcategoryId = new FormControl<string | null>({ value: null, disabled: true });
 
-  // --- Lookup data ---
   statuses = signal<IStatus[]>([]);
   allCategories = signal<ICategory[]>([]);
   topLevelCategories = signal<ICategory[]>([]);
   subcategoryOptions = signal<ICategory[]>([]);
 
-  // --- Autocomplete state ---
   customerResults = signal<ICustomerSearch[]>([]);
   productResults = signal<IProductSearch[]>([]);
   selectedCustomer = signal<ICustomerSearch | null>(null);
   selectedProduct = signal<IProductSearch | null>(null);
 
-  // --- Report state ---
   loading = signal(false);
   hasFetched = signal(false);
   report = signal<IFechamentoReport | null>(null);
@@ -96,7 +92,6 @@ export class Fechamento implements OnInit {
     'statusName', 'expand',
   ];
 
-  // displayWith functions must be arrow properties to retain `this` context in template
   readonly displayCustomer = (c: ICustomerSearch | null): string =>
     c ? `${c.firstName} ${c.lastName}` : '';
 

@@ -114,8 +114,6 @@ export class ProductForm implements OnInit {
     subCategoryId: [null as string | null]
   });
 
-  // ── Lifecycle ─────────────────────────────────────────────────────────────────
-
   ngOnInit(): void {
     this.statusSvc.getAll().subscribe(s => this.statuses.set(s.filter(x => this.productStatuses.includes(x.name))));
     this.unitOfMeasureSvc.getAll().subscribe(u => this.units.set(u));
@@ -269,7 +267,6 @@ export class ProductForm implements OnInit {
     this.form.patchValue({ subCategoryId: null });
   }
 
-  // ── Tags ──────────────────────────────────────────────────────────────────────
 
   addTag(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
@@ -283,12 +280,8 @@ export class ProductForm implements OnInit {
     this.tags.update(tags => tags.filter(t => t !== tag));
   }
 
-  // ── Submit ────────────────────────────────────────────────────────────────────
 
   onSubmit(): void {
-    // Check org default first — if still loading, the gainPercentage control is null
-    // (required-invalid), so checking form.invalid first would show a misleading
-    // "campo obrigatório" error on the gain field instead of a meaningful message.
     if (this.awaitingOrgDefault()) {
       this.snackBar.open('Aguardando configuração padrão da loja. Tente novamente em instantes.', 'Fechar', { duration: 4000 });
       return;
@@ -305,8 +298,6 @@ export class ProductForm implements OnInit {
       next: () => { this.saving.set(false); this.snackBar.open(this.isEditMode() ? 'Produto atualizado!' : 'Produto criado!', 'Fechar', { duration: 3000 }); this.router.navigate(['/produtos']); },
       error: (err) => {
         this.saving.set(false);
-        // The API can return a plain string body (e.g. 400 pricing errors),
-        // a problem-details object with `.detail`, or nothing.
         let msg = 'Erro ao salvar produto';
         if (typeof err?.error === 'string' && err.error.trim()) {
           msg = err.error.trim();
