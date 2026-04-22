@@ -5,15 +5,107 @@
     </button>
   </app-page-header>
 
-  <div class="search-row">
-    <mat-form-field appearance="outline" class="search-field">
-      <mat-label>Buscar produtos</mat-label>
-      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="applyFilter()" placeholder="Nome ou código..." />
+  <!-- Primary filters: search, category, status -->
+  <div class="filter-row filter-row-primary">
+    <mat-form-field appearance="outline" class="filter-search">
+      <mat-label>Buscar</mat-label>
       <mat-icon matPrefix>search</mat-icon>
+      <input matInput [(ngModel)]="searchTerm" (ngModelChange)="onSearchInput()" placeholder="Nome ou código..."
+        aria-label="Buscar produtos" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <mat-select [(ngModel)]="selectedCategoryId" (ngModelChange)="onCategoryChange()">
+        <mat-option value="">Todas</mat-option>
+        @for (cat of metadata()?.categories ?? []; track cat.id) {
+        <mat-option [value]="cat.id">{{ cat.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="selectedStatusId" (ngModelChange)="onFilterChange()">
+        <mat-option value="">Todos</mat-option>
+        @for (s of metadata()?.statuses ?? []; track s.id) {
+        <mat-option [value]="s.id">{{ s.name }}</mat-option>
+        }
+      </mat-select>
     </mat-form-field>
   </div>
 
-  <div class="table-container card-elevated">
+  <!-- Secondary filters: subcategory, size, color, tags -->
+  <div class="filter-row filter-row-secondary">
+    <mat-form-field appearance="outline">
+      <mat-label>Subcategoria</mat-label>
+      <mat-select [(ngModel)]="selectedSubcategoryId" (ngModelChange)="onFilterChange()"
+        [disabled]="!selectedCategoryId">
+        <mat-option value="">Todas</mat-option>
+        @for (sub of availableSubcategories; track sub.id) {
+        <mat-option [value]="sub.id">{{ sub.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tamanho</mat-label>
+      <mat-select multiple [(ngModel)]="selectedSizes" (ngModelChange)="onFilterChange()">
+        @for (s of metadata()?.sizes ?? []; track s) {
+        <mat-option [value]="s">{{ s }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cor</mat-label>
+      <mat-select multiple [(ngModel)]="selectedColors" (ngModelChange)="onFilterChange()">
+        @for (c of metadata()?.colors ?? []; track c) {
+        <mat-option [value]="c">{{ c }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tags</mat-label>
+      <mat-select multiple [(ngModel)]="selectedTags" (ngModelChange)="onFilterChange()">
+        @for (t of metadata()?.tags ?? []; track t) {
+        <mat-option [value]="t">{{ t }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <!-- Active filter chips -->
+  @if (hasActiveFilters) {
+  <div class="filter-chips-row" role="region" aria-label="Filtros ativos">
+    <mat-chip-set>
+      @for (chip of activeFilterChips; track chip.key) {
+      <mat-chip (removed)="removeFilterChip(chip.key)">
+        {{ chip.label }}
+        <button matChipRemove [attr.aria-label]="'Remover filtro: ' + chip.label">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+      }
+    </mat-chip-set>
+    <button mat-button class="clear-all-btn" (click)="clearFilters()">
+      <mat-icon>clear_all</mat-icon> Limpar todos
+    </button>
+  </div>
+  }
+
+  <!-- Results summary -->
+  <p class="results-summary" aria-live="polite" aria-atomic="true">
+    @if (!loading()) {
+    {{ totalResults }} {{ totalResults === 1 ? 'produto encontrado' : 'produtos encontrados' }}
+    }
+  </p>
+
+  <div class="table-container card-elevated" [class.table-loading]="loading()">
+    @if (loading()) {
+    <mat-progress-bar mode="indeterminate" aria-label="Carregando produtos"></mat-progress-bar>
+    }
     <table mat-table [dataSource]="pagedProducts()" class="full-width-table">
       <ng-container matColumnDef="code">
         <th mat-header-cell *matHeaderCellDef>Código</th>
@@ -82,14 +174,25 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell empty-row" [attr.colspan]="displayedColumns.length">
+          @if (!loading()) {
+          @if (hasActiveFilters) {
           <div class="empty-state">
-            <mat-icon>inbox</mat-icon>
-            <span>Nenhum produto encontrado</span>
+            <mat-icon>search_off</mat-icon>
+            <span>Nenhum produto encontrado para os filtros aplicados.</span>
+            <button mat-stroked-button (click)="clearFilters()">Limpar filtros</button>
           </div>
+          } @else {
+          <div class="empty-state">
+            <mat-icon>inventory_2</mat-icon>
+            <span>Nenhum produto cadastrado ainda.</span>
+            <button mat-flat-button color="primary" routerLink="/produtos/novo">Criar primeiro produto</button>
+          </div>
+          }
+          }
         </td>
       </tr>
     </table>
-    <mat-paginator [length]="filteredProducts().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]"
+    <mat-paginator [length]="products().length" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50]"
       (page)="onPage($event)" showFirstLastButtons />
   </div>
 </div>
