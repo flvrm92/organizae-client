@@ -14,7 +14,7 @@ import { ICustomer } from '../../../../../types/ICustomer';
 import { CustomerService } from '../../services/customer.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
-import { removeAccents } from '../../../../shared/utils/string-utils';
+import { matchesQuery } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-customer-list',
@@ -61,12 +61,12 @@ export class CustomerList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = removeAccents(this.searchTerm.toLowerCase().trim());
-    const filtered = term
+    const q = this.searchTerm;
+    const filtered = q.trim()
       ? this.customers().filter(c =>
-        removeAccents(`${c.firstName ?? ''} ${c.lastName ?? ''}`.toLowerCase()).includes(term) ||
-        removeAccents(c.email?.toLowerCase() ?? '').includes(term) ||
-        removeAccents(c.document?.toLowerCase() ?? '').includes(term))
+        matchesQuery(`${c.firstName ?? ''} ${c.lastName ?? ''}`, q) ||
+        matchesQuery(c.email, q) ||
+        matchesQuery(c.document, q))
       : this.customers();
     this.filteredCustomers.set(filtered);
     this.pageIndex = 0;

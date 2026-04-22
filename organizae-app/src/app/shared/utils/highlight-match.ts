@@ -1,4 +1,4 @@
-import { removeAccents } from './string-utils';
+import { normalize } from './string-utils';
 
 export interface HighlightSegment {
   text: string;
@@ -15,8 +15,8 @@ export function getHighlightSegments(value: string | null | undefined, query: un
     return [{ text: value, highlight: false }];
   }
 
-  const normalizedValue = removeAccents(value.toLowerCase());
-  const normalizedTerms = terms.map(t => removeAccents(t.toLowerCase()));
+  const normalizedValue = normalize(value);
+  const normalizedTerms = terms.map(t => normalize(t));
   const highlights = new Array<boolean>(value.length).fill(false);
 
   for (const term of normalizedTerms) {

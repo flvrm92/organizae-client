@@ -17,6 +17,7 @@ import { ProductService } from '../../services/product.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { StatusClassPipe } from '../../../../shared/pipes/status-class.pipe';
+import { matchesQuery } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-product-list',
@@ -63,13 +64,13 @@ export class ProductList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = this.searchTerm.toLowerCase().trim();
-    const filtered = term
-      ? this.products()
-        .filter(p => p.name?.toLowerCase().includes(term) ||
-          p.code?.toString().includes(term) ||
-          p.categoryName?.toLowerCase().includes(term) ||
-          p.tags?.some(t => t.toLowerCase().includes(term)))
+    const q = this.searchTerm;
+    const filtered = q.trim()
+      ? this.products().filter(p =>
+          matchesQuery(p.name, q) ||
+          matchesQuery(p.code?.toString(), q) ||
+          matchesQuery(p.categoryName, q) ||
+          p.tags?.some(t => matchesQuery(t, q)))
       : this.products();
     this.filteredProducts.set(filtered);
     this.pageIndex = 0;

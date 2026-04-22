@@ -25,6 +25,7 @@ import { startWith, map } from 'rxjs/operators';
 import { CategoryService } from '../../../categories/services/category.service';
 import { ICategory } from '../../../../../types/ICategory';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { normalize } from '../../../../shared/utils/string-utils';
 
 export type PricingEditSource = 'costOrGain' | 'price';
 
@@ -47,32 +48,18 @@ export class ProductForm implements OnInit {
 
   private readonly productStatuses = ['Ativo', 'Inativo'];
 
-  /** Guards programmatic pricing updates from triggering cascading valueChanges. */
   private _updatingPricing = false;
 
-  /**
-   * Tracks whether gainPercentage has already been seeded from the org default.
-   * Prevents re-seeding if the org config signal updates again after the first load.
-   */
   private _gainSeeded = false;
 
   constructor(private readonly destroyRef: DestroyRef) {
-    // One-time seed: apply the org default gain percentage to a new product form
-    // only once the config finishes loading (defaultGainPercentage transitions null → number).
-    // Using effect() so the seed is deferred until the config signal is available,
-    // even if that happens after ngOnInit completes.
     effect(() => {
       const defaultGain = this.orgStore.defaultGainPercentage();
       if (!this.isEditMode() && !this._gainSeeded && defaultGain !== null) {
         this._gainSeeded = true;
         const gainCtrl = this.form.get('gainPercentage')!;
-        // Only seed when the field is still in its initial untouched-null state.
-        // If the user already typed a value, pristine is false or value is non-null;
-        // in that case we must not overwrite what they entered.
         if (gainCtrl.pristine && gainCtrl.value === null) {
           this.form.patchValue({ gainPercentage: defaultGain }, { emitEvent: false });
-          // If costPrice was already entered before the org default arrived,
-          // recalculate price so the three fields stay coherent.
           const cost = this.toNum(this.form.get('costPrice')!.value);
           if (cost > 0) {
             this._updatingPricing = true;
@@ -84,8 +71,6 @@ export class ProductForm implements OnInit {
       }
     });
   }
-
-  // ── General state ────────────────────────────────────────────────────────────
 
   productId = signal<string | null>(null);
   loading = signal(false);
@@ -99,56 +84,27 @@ export class ProductForm implements OnInit {
   tags = signal<string[]>([]);
   readonly separatorKeyCodes = [ENTER, COMMA] as const;
 
-  // ── Pricing state (template hooks) ───────────────────────────────────────────
-
-  /**
-   * True when costPrice > 0 — enables direct price editing.
-   * When false the price input should be read-only and the hint should be shown.
-   */
   priceEditable = signal(false);
 
-  /**
-   * Tracks whether the last pricing edit came from the cost/gain side or from
-   * the price side. Sent to the backend as `pricingEditSource`.
-   */
   pricingEditSource = signal<PricingEditSource>('costOrGain');
 
-  /**
-   * Mirrors the organization's stored default gain percentage.
-   * Null while the config has not yet been fetched.
-   * The template can display a "padrão da loja: X%" hint when this is set.
-   */
   readonly orgDefaultGain = computed(() => this.orgStore.defaultGainPercentage());
 
-  /**
-   * True in create mode while the org config is still being fetched.
-   * The template uses this to show a loading indicator on the gainPercentage
-   * field and to communicate that the store default is not yet known.
-   * Also used by onSubmit to prevent accidentally saving gainPercentage: 0
-   * before the real default arrives.
-   */
   readonly awaitingOrgDefault = computed(() =>
     !this.isEditMode() && this.orgStore.defaultGainPercentage() === null
   );
 
-  // ── Category autocomplete controls ───────────────────────────────────────────
 
   categoryControl = new FormControl('');
   subCategoryControl = new FormControl('');
   filteredCategories$!: Observable<ICategory[]>;
   filteredSubCategories$!: Observable<ICategory[]>;
 
-  // ── Reactive form ─────────────────────────────────────────────────────────────
-
   form = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2)]],
     description: [''],
-    // price: 2 decimal places; editable directly only when costPrice > 0
     price: [0, [Validators.required, Validators.min(0)]],
-    // costPrice / gainPercentage: up to 4 decimal places
     costPrice: [0, [Validators.required, Validators.min(0)]],
-    // null in create mode until the org default is seeded — keeps the field blank
-    // rather than showing a misleading 0. loadProduct always supplies a real number.
     gainPercentage: [null as number | null, [Validators.required, Validators.min(0)]],
     statusId: ['', Validators.required],
     unitOfMeasureId: [null as string | null],
@@ -208,22 +164,11 @@ export class ProductForm implements OnInit {
     });
   }
 
-  // ── Pricing logic ─────────────────────────────────────────────────────────────
-
-  /**
-   * Wires up the three pricing controls so they stay consistent with the formula:
-   *   Price = CostPrice × (1 + GainPercentage / 100)
-   *
-   * Feedback loops are prevented by:
-   * 1. Setting dependent controls with `{ emitEvent: false }`.
-   * 2. The `_updatingPricing` re-entry guard for any synchronous cascades.
-   */
   private setupPricingListeners(): void {
     const costPriceCtrl = this.form.get('costPrice')!;
     const gainPercentageCtrl = this.form.get('gainPercentage')!;
     const priceCtrl = this.form.get('price')!;
 
-    // costPrice changes → recalculate price; update editability state.
     costPriceCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(rawCost => {
       if (this._updatingPricing) return;
       const cost = this.toNum(rawCost);
@@ -235,7 +180,6 @@ export class ProductForm implements OnInit {
       this._updatingPricing = false;
     });
 
-    // gainPercentage changes → recalculate price.
     gainPercentageCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(rawGain => {
       if (this._updatingPricing) return;
       const cost = this.toNum(costPriceCtrl.value);
@@ -246,9 +190,6 @@ export class ProductForm implements OnInit {
       this._updatingPricing = false;
     });
 
-    // price changes → recalculate gainPercentage (only valid when costPrice > 0).
-    // If the manually entered price is below cost the form becomes invalid instead
-    // of silently clamping gain to 0.
     priceCtrl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(rawPrice => {
       if (this._updatingPricing) return;
       const cost = this.toNum(costPriceCtrl.value);
@@ -265,34 +206,27 @@ export class ProductForm implements OnInit {
     });
   }
 
-  /** Price = CostPrice × (1 + GainPercentage / 100), rounded to 2 decimal places. */
   private calcPrice(costPrice: number, gainPercentage: number): number {
     return Math.round(costPrice * (1 + gainPercentage / 100) * 100) / 100;
   }
 
-  /**
-   * GainPercentage = (Price / CostPrice − 1) × 100, rounded to 4 decimal places.
-   * Only called when price >= costPrice (the listener returns early otherwise).
-   */
   private calcGainPercentage(costPrice: number, price: number): number {
     const raw = (price / costPrice - 1) * 100;
     return Math.round(raw * 10000) / 10000;
   }
 
-  /** Coerces a form control value (may be null / string during typing) to a number. */
   private toNum(value: unknown): number {
     return parseFloat(String(value ?? 0)) || 0;
   }
 
-  // ── Category autocomplete ─────────────────────────────────────────────────────
 
   setupCategoryAutocomplete(): void {
     this.filteredCategories$ = this.categoryControl.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef),
       startWith(''),
       map(value => {
-        const filterValue = (value || '').toLowerCase();
-        return this.rootCategories().filter(c => c.name.toLowerCase().includes(filterValue));
+        const filterValue = normalize(value || '');
+        return this.rootCategories().filter(c => normalize(c.name).includes(filterValue));
       })
     );
   }
@@ -302,8 +236,8 @@ export class ProductForm implements OnInit {
       takeUntilDestroyed(this.destroyRef),
       startWith(''),
       map(value => {
-        const filterValue = (value || '').toLowerCase();
-        return this.subCategories().filter(c => c.name.toLowerCase().includes(filterValue));
+        const filterValue = normalize(value || '');
+        return this.subCategories().filter(c => normalize(c.name).includes(filterValue));
       })
     );
   }
