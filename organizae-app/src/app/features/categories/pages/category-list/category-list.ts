@@ -15,6 +15,7 @@ import { ICategory } from '../../../../../types/ICategory';
 import { CategoryService } from '../../services/category.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { matchesQuery } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-category-list',
@@ -47,9 +48,9 @@ export class CategoryList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = this.searchTerm.toLowerCase().trim();
-    const filtered = term
-      ? this.categories().filter(c => c.name?.toLowerCase().includes(term) || c.parentCategoryName?.toLowerCase().includes(term))
+    const q = this.searchTerm;
+    const filtered = q.trim()
+      ? this.categories().filter(c => matchesQuery(c.name, q) || matchesQuery(c.parentCategoryName, q))
       : this.categories();
     this.filteredCategories.set(filtered);
     this.pageIndex = 0;

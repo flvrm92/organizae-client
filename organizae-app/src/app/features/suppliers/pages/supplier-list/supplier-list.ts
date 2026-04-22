@@ -14,6 +14,7 @@ import { ISupplier } from '../../../../../types/ISupplier';
 import { SupplierService } from '../../services/supplier.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
+import { matchesQuery } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-supplier-list',
@@ -46,8 +47,10 @@ export class SupplierList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = this.searchTerm.toLowerCase().trim();
-    const filtered = term ? this.suppliers().filter(s => s.name?.toLowerCase().includes(term) || s.email?.toLowerCase().includes(term)) : this.suppliers();
+    const q = this.searchTerm;
+    const filtered = q.trim()
+      ? this.suppliers().filter(s => matchesQuery(s.name, q) || matchesQuery(s.email, q))
+      : this.suppliers();
     this.filteredSuppliers.set(filtered);
     this.pageIndex = 0;
     this.updatePage();

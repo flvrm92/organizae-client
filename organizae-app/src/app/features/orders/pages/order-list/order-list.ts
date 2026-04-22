@@ -29,7 +29,7 @@ import { CustomerService } from '../../../customers/services/customer.service';
 import { ConfirmDialog } from '../../../../components/confirm-dialog/confirm-dialog';
 import { ReceivePaymentDialog, ReceivePaymentDialogResult } from '../../components/receive-payment-dialog/receive-payment-dialog';
 import { PageHeader } from '../../../../components/page-header/page-header';
-import { removeAccents } from '../../../../shared/utils/string-utils';
+import { matchesQuery } from '../../../../shared/utils/string-utils';
 
 @Component({
   selector: 'app-order-list',
@@ -124,8 +124,10 @@ export class OrderList implements OnInit {
   }
 
   applyFilter(): void {
-    const term = removeAccents(this.searchTerm.toLowerCase().trim());
-    const filtered = term ? this.orders().filter(o => removeAccents(o.id?.toLowerCase() ?? '').includes(term) || removeAccents(o.customerId?.toLowerCase() ?? '').includes(term)) : this.orders();
+    const q = this.searchTerm;
+    const filtered = q.trim()
+      ? this.orders().filter(o => matchesQuery(o.id, q) || matchesQuery(o.customerId, q))
+      : this.orders();
     this.filteredOrders.set(filtered);
     this.pageIndex = 0;
     this.updatePage();

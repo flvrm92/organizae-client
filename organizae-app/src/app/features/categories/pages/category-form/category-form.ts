@@ -13,6 +13,7 @@ import { AsyncPipe } from '@angular/common';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { CategoryService } from '../../services/category.service';
+import { normalize } from '../../../../shared/utils/string-utils';
 import { PageHeader } from '../../../../components/page-header/page-header';
 import { ICategory } from '../../../../../types/ICategory';
 
@@ -65,10 +66,10 @@ export class CategoryForm implements OnInit {
   }
 
   filterCategories(value: string): ICategory[] {
-    const filterValue = value.toLowerCase();
+    const filterValue = normalize(value);
     const currentId = this.categoryId();
     return this.rootCategories().filter(c =>
-      c.name.toLowerCase().includes(filterValue) && c.id !== currentId
+      normalize(c.name).includes(filterValue) && c.id !== currentId
     );
   }
 
